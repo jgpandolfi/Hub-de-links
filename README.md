@@ -17,7 +17,11 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 ## 💻 Projeto
 
-O Calendário da Copa é um projeto que mostra os jogos da Copa de 2022.
+O projeto teve com intuito desenvolver um hub de links que pudesse ser utilizado em minhas redes sociais, similar a uma solução como o "LinkTree". Utilizei como base o curso "Discover" da Rocketseat, em que é desenvolvida uma solução bastante similar.
+
+Além do uso próprio, o projeto foi bastante importante para exercitar meus conhecimentos de front-end, envolvendo HTML, CSS e JavaScript.
+
+Também foi possível exercitar ferramentas como o Git, GitHub e Figma.
 
 ## :memo: Licença
 
