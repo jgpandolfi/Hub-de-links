@@ -183,3 +183,8 @@ footer {
     left: 0%;
   }
 }
+
+h1 {
+  font-size: 20px;
+  margin-top: 14px;
+}
