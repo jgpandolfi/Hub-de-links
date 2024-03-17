@@ -185,7 +185,7 @@ footer {
 }
 
 h1 {
-  font-size: 20px;
+  font-size: clamp(1em, 1em + 1vw, 1.5em);
   margin-top: 14px;
 }
 
