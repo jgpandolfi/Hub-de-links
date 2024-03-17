@@ -59,6 +59,9 @@
         a.appendChild(r)
       })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=")
     </script>
+
+    <!-- Puxar a biblioteca plataform.js -->
+    <script src="https://cdn.jsdelivr.net/npm/platform@1.3.5/platform.min.js"></script>
   </head>
   <body>
     <div id="container">
@@ -142,6 +145,29 @@
         </li>
       </ul>
       -->
+      <p id="pInfoVisitante"><i>Suas informações:</i></p>
+      <div id="boxInfo">
+        <div>
+          <p><strong>IP:</strong></p>
+          <p id="IP"></p>
+        </div>
+        <div>
+          <p><strong>Provedor:</strong></p>
+          <p id="ISP"></p>
+        </div>
+        <div>
+          <p><strong>Localização:</strong></p>
+          <p id="loc"></p>
+        </div>
+        <div>
+          <p><strong>Sistema operacional:</strong></p>
+          <p id="SO"></p>
+        </div>
+        <div>
+          <p><strong>Browser:</strong></p>
+          <p id="browser"></p>
+        </div>
+      </div>
     </div>
     <footer>Feito por Jota / José Guilherme Pandolfi</footer>
     <script
@@ -152,7 +178,95 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
+    <script>
+      // Função para obter o endereço IP usando uma API de terceiros
+      function obterIP() {
+        fetch("https://api.ipify.org?format=json")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("IP").innerText = data.ip
+          })
+          .catch((error) =>
+            console.error("Ocorreu um erro ao obter o endereço IP:", error)
+          )
+      }
+      // Função para obter o SO do usuário
+      function obterSO() {
+        document.getElementById("SO").innerText = platform.os.family
+      }
+      // Função para obter o browser do usuário
+      function obterBrowser() {
+        let userAgent = navigator.userAgent
+        let browser
 
+        switch (true) {
+          case /Firefox/i.test(userAgent):
+            browser = "Firefox"
+            break
+          case /Chrome/i.test(userAgent):
+            browser = "Chrome"
+            break
+          case /Safari/i.test(userAgent):
+            if (/CriOS/i.test(userAgent)) {
+              browser = "Chrome (iOS)"
+            } else {
+              browser = "Safari"
+            }
+            break
+          case /Opera|OPR/i.test(userAgent):
+            browser = "Opera"
+            break
+          case /Edge/i.test(userAgent):
+            browser = "Edge"
+            break
+          case /MSIE|Trident/i.test(userAgent):
+            browser = "Internet Explorer"
+            break
+          case /CriOS|FxiOS|OPiOS|SamsungBrowser|UCBrowser|Opera Mini|Opera Touch|Dolfin|Puffin|Mercury|Focus|Coast|Mobile|Mobile Safari|Android|Bolt|IEMobile|Silk|Skyfire|Nokia|UCWEB|BREW|Minimo|NetFront|Novarra|Vision|MQQBrowser|MicroMessenger|Weibo|MQQBrowser|Baidu|Alipay|QQ/i.test(
+            userAgent
+          ):
+            browser = "Outros navegadores móveis"
+            break
+          default:
+            browser = "Desconhecido"
+        }
+        document.getElementById("browser").innerText = browser
+      }
+      // Obter ISP do usuário
+      function obterISP() {
+        fetch("https://ipapi.co/json/")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("ISP").innerText = data.org
+          })
+          .catch((error) =>
+            console.error("Ocorreu um erro ao obter o ISP:", error)
+          )
+      }
+      //Obter geolocalização
+      function obterLoc() {
+        fetch("https://ipapi.co/json/")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById(
+              "loc"
+            ).innerText = `${data.city}, ${data.region}, ${data.country_name}`
+          })
+          .catch((error) =>
+            console.error("Ocorreu um erro ao obter a localização:", error)
+          )
+      }
+      // Chamar as funções criadas anteriormente
+      window.onload = function () {
+        obterIP()
+        obterSO()
+        obterBrowser()
+        obterISP()
+        obterLoc()
+      }
+    </script>
     <script src="./script.js"></script>
   </body>
+  <!-- Dando pala pras pussy,
+  e apagando os barros -->
 </html>
