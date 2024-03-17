@@ -188,3 +188,9 @@ h1 {
   font-size: 20px;
   margin-top: 14px;
 }
+
+#pInsights {
+  text-align: center;
+  padding: 44px 0 0;
+  font-size: 16px;
+}
