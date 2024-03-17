@@ -191,6 +191,10 @@
           <p><strong>Browser:</strong></p>
           <p id="browser"></p>
         </div>
+        <div>
+          <p><strong>Vindo de:</strong></p>
+          <p id="UTM"></p>
+        </div>
       </div>
     </div>
     <footer>Desenvolvido por Jota / José Guilherme Pandolfi</footer>
@@ -267,7 +271,7 @@
             console.error("Ocorreu um erro ao obter o ISP:", error)
           )
       }
-      //Obter geolocalização
+      // Obter geolocalização com base no endereço IP
       function obterLoc() {
         fetch("https://ipapi.co/json/")
           .then((response) => response.json())
@@ -279,6 +283,26 @@
           .catch((error) =>
             console.error("Ocorreu um erro ao obter a localização:", error)
           )
+      }
+      // Obter a origem do tráfego com base no UTM Source
+      // Obtendo parâmetros da URL aberta
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href
+        name = name.replace(/[\[\]]/g, "\\$&")
+        let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url)
+        if (!results) return null
+        if (!results[2]) return ""
+        return decodeURIComponent(results[2].replace(/\+/g, " "))
+      }
+      // Obter o valor do parâmetro UTM source da URL
+      let utmSource = getParameterByName("utm_source")
+      // Exibir a origem do tráfego
+      if (utmSource) {
+        document.getElementById("UTM").innerText = utmSource
+      } else {
+        document.getElementById("UTM").innerText =
+          "Tráfego direto ou origem desconhecida"
       }
       // Chamar as funções criadas anteriormente
       window.onload = function () {
