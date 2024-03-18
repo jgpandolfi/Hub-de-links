@@ -312,14 +312,27 @@
         obterLoc()
       }
       // Detectar se o visitante está usando um dispositivo móvel para alterar CSS
-      // Lista de browsers conhecidos para desktop
-      const desktopBrowsers = ["Chrome", "Firefox", "Safari", "Edge", "Opera"]
+      // Lista de Sistemas Operacionais conhecidos para desktop
+      const desktopOS = [
+        "Windows",
+        "Windows Server",
+        "Windows XP",
+        "OS X",
+        "Ubuntu",
+        "Windows Vista",
+        "Windows 7",
+        "Windows 8",
+        "Windows 10",
+        "Windows 11",
+        "Debian",
+        "Fedora",
+      ]
       // Função para verificar se o agente de usuário é um navegador de desktop
-      function isDesktopBrowser() {
-        let userAgent = navigator.userAgent
-        return desktopBrowsers.some((browser) => userAgent.includes(browser))
+      function isDesktop() {
+        let SOatual = platform.os.family
+        return desktopOS.some((browser) => SOatual.includes(browser))
       }
-      if (isDesktopBrowser()) {
+      if (isDesktop()) {
         // Se for um dispositivo móvel, alterar a duração da animação
         document.querySelector("body").style.animation =
           "moverFundo 320s infinite alternate linear"
