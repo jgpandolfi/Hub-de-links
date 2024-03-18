@@ -37,6 +37,7 @@ body {
   */
 
   background: var(--bg-url) no-repeat top center/cover;
+  animation: moverFundo 180s infinite linear;
 }
 
 body * {
@@ -180,6 +181,16 @@ footer {
   }
   to {
     left: 0%;
+  }
+}
+
+@keyframes moverFundo {
+  /* Animação para mover a imagem de plano de fundo */
+  from {
+    background-position: 0 0; /* Posição inicial da imagem */
+  }
+  to {
+    background-position: 100% 100%; /* Posição final da imagem */
   }
 }
 
