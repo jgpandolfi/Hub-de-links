@@ -311,6 +311,19 @@
         obterISP()
         obterLoc()
       }
+      // Detectar se o visitante está usando um dispositivo móvel para alterar CSS
+      // Lista de browsers conhecidos para desktop
+      const desktopBrowsers = ["Chrome", "Firefox", "Safari", "Edge", "Opera"]
+      // Função para verificar se o agente de usuário é um navegador de desktop
+      function isDesktopBrowser() {
+        let userAgent = navigator.userAgent
+        return desktopBrowsers.some((browser) => userAgent.includes(browser))
+      }
+      if (isDesktopBrowser()) {
+        // Se for um dispositivo móvel, alterar a duração da animação
+        document.querySelector("body").style.animation =
+          "moverFundo 320s infinite alternate linear"
+      }
     </script>
     <script src="./script.js"></script>
   </body>

@@ -37,7 +37,7 @@ body {
   */
 
   background: var(--bg-url) no-repeat top center/cover;
-  animation: moverFundo 180s infinite linear;
+  animation: moverFundo 30s infinite alternate linear;
 }
 
 body * {
