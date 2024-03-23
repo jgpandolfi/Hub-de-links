@@ -26,6 +26,7 @@
 
 .light #switch button {
   animation: slide-in 0.4s forwards;
+  filter: invert(1);
 }
 
 body {
