@@ -7,6 +7,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,15 +83,44 @@
     <!-- Puxar a biblioteca plataform.js -->
     <script src="https://cdn.jsdelivr.net/npm/platform@1.3.5/platform.min.js"></script>
   </head>
+
   <body>
     <div id="container">
+      <!-- Botão switch de idiomas -->
+      <div class="containerIdioma">
+        <div class="btnIdioma">
+          <div class="btnWrapper">
+            <img
+              src="https://flagcdn.com/w160/br.png"
+              srcset="https://flagcdn.com/w320/br.png 2x"
+              width="28"
+              alt="Idioma Português"
+              class="imgIdiomaSelecionado"
+            />
+            <div class="idiomaSelecionado">PT-BR</div>
+            <i class="ri-arrow-drop-down-fill seta"></i>
+          </div>
+          <div class="listaIdiomas">
+            <div class="itensListaIdioma">
+              <img
+                src="https://flagcdn.com/w160/us.png"
+                srcset="https://flagcdn.com/w320/us.png 2x"
+                width="28"
+                alt="English Language"
+                class="imgIdiomaNaoSelecionado"
+              />
+              <div class="idiomaNaoSelecionado">EN-US</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="profile">
         <img
           src="./assets/avatar.png"
           alt="Imagem de avatar do Jota na frente de um fundo claro."
         />
         <h1>Jota / José Guilherme Pandolfi</h1>
-        <p><i>Bem-vindo ao meu hub de links!</i></p>
+        <p><i id="iBemVindo">Bem-vindo ao meu hub de links!</i></p>
       </div>
       <div id="switch" onclick="toggleMode()">
         <button></button>
@@ -110,7 +143,11 @@
           </a>
         </li>
         <li>
-          <a href="https://www.dio.me/users/jgpandolfi" target="_blank">
+          <a
+            href="https://www.dio.me/users/jgpandolfi"
+            target="_blank"
+            id="aPerfilDio"
+          >
             <ion-icon name="ribbon-outline"></ion-icon>Perfil Dio.me
           </a>
         </li>
@@ -158,6 +195,7 @@
           <a
             href="https://open.spotify.com/playlist/3YTa2SxUmVd7pnoJ2e1sn4?si=915a4102d15b4a66"
             target="_blank"
+            id="aRockNacional"
           >
             <ion-icon name="play-circle-outline"></ion-icon>Playlist Rock 2000
             Nacional
@@ -174,22 +212,22 @@
         </li>
       </ul>
       -->
-      <p id="pInfoVisitante"><i>Suas informações:</i></p>
+      <p id="pInfoVisitante"><i id="iSuasInfos">Suas informações:</i></p>
       <div id="boxInfo">
         <div>
           <p><strong>IP:</strong></p>
           <p id="IP"></p>
         </div>
         <div>
-          <p><strong>Provedor:</strong></p>
+          <p><strong id="sProvedor">Provedor:</strong></p>
           <p id="ISP"></p>
         </div>
         <div>
-          <p><strong>Localização:</strong></p>
+          <p><strong id="sLoc">Localização:</strong></p>
           <p id="loc"></p>
         </div>
         <div>
-          <p><strong>Sistema operacional:</strong></p>
+          <p><strong id="sSO">Sistema operacional:</strong></p>
           <p id="SO"></p>
         </div>
         <div>
@@ -197,12 +235,14 @@
           <p id="browser"></p>
         </div>
         <div>
-          <p><strong>Vindo de:</strong></p>
+          <p><strong id="sVindoDe">Vindo de:</strong></p>
           <p id="UTM"></p>
         </div>
       </div>
     </div>
-    <footer>Desenvolvido por Jota / José Guilherme Pandolfi</footer>
+    <footer id="fDesenvolvidoPor">
+      Desenvolvido por Jota / José Guilherme Pandolfi
+    </footer>
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -211,139 +251,8 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-    <script>
-      // Função para obter o endereço IP usando uma API de terceiros
-      function obterIP() {
-        fetch("https://api.ipify.org?format=json")
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById("IP").innerText = data.ip
-          })
-          .catch((error) =>
-            console.error("Ocorreu um erro ao obter o endereço IP:", error)
-          )
-      }
-      // Função para obter o SO do usuário
-      function obterSO() {
-        document.getElementById("SO").innerText = platform.os.family
-      }
-      // Função para obter o browser do usuário
-      function obterBrowser() {
-        let userAgent = navigator.userAgent
-        let browser
-
-        switch (true) {
-          case /Firefox/i.test(userAgent):
-            browser = "Firefox"
-            break
-          case /Chrome/i.test(userAgent):
-            browser = "Chrome"
-            break
-          case /Safari/i.test(userAgent):
-            if (/CriOS/i.test(userAgent)) {
-              browser = "Chrome (iOS)"
-            } else {
-              browser = "Safari"
-            }
-            break
-          case /Opera|OPR/i.test(userAgent):
-            browser = "Opera"
-            break
-          case /Edge/i.test(userAgent):
-            browser = "Edge"
-            break
-          case /MSIE|Trident/i.test(userAgent):
-            browser = "Internet Explorer"
-            break
-          case /CriOS|FxiOS|OPiOS|SamsungBrowser|UCBrowser|Opera Mini|Opera Touch|Dolfin|Puffin|Mercury|Focus|Coast|Mobile|Mobile Safari|Android|Bolt|IEMobile|Silk|Skyfire|Nokia|UCWEB|BREW|Minimo|NetFront|Novarra|Vision|MQQBrowser|MicroMessenger|Weibo|MQQBrowser|Baidu|Alipay|QQ/i.test(
-            userAgent
-          ):
-            browser = "Outros navegadores móveis"
-            break
-          default:
-            browser = "Desconhecido"
-        }
-        document.getElementById("browser").innerText = browser
-      }
-      // Obter ISP do usuário
-      function obterISP() {
-        fetch("https://ipapi.co/json/")
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById("ISP").innerText = data.org
-          })
-          .catch((error) =>
-            console.error("Ocorreu um erro ao obter o ISP:", error)
-          )
-      }
-      // Obter geolocalização com base no endereço IP
-      function obterLoc() {
-        fetch("https://ipapi.co/json/")
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById(
-              "loc"
-            ).innerText = `${data.city}, ${data.region}, ${data.country_name}`
-          })
-          .catch((error) =>
-            console.error("Ocorreu um erro ao obter a localização:", error)
-          )
-      }
-      // Obter a origem do tráfego com base no UTM Source
-      // Obtendo parâmetros da URL aberta
-      function getParameterByName(name, url) {
-        if (!url) url = window.location.href
-        name = name.replace(/[\[\]]/g, "\\$&")
-        let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-          results = regex.exec(url)
-        if (!results) return null
-        if (!results[2]) return ""
-        return decodeURIComponent(results[2].replace(/\+/g, " "))
-      }
-      // Obter o valor do parâmetro UTM source da URL
-      let utmSource = getParameterByName("utm_source")
-      // Exibir a origem do tráfego
-      if (utmSource) {
-        document.getElementById("UTM").innerText = utmSource
-      } else {
-        document.getElementById("UTM").innerText = "Tráfego direto"
-      }
-      // Chamar as funções criadas anteriormente
-      window.onload = function () {
-        obterIP()
-        obterSO()
-        obterBrowser()
-        obterISP()
-        obterLoc()
-      }
-      // Detectar se o visitante está usando um dispositivo móvel para alterar CSS
-      // Lista de Sistemas Operacionais conhecidos para desktop
-      const desktopOS = [
-        "Windows",
-        "Windows Server",
-        "Windows XP",
-        "OS X",
-        "Ubuntu",
-        "Windows Vista",
-        "Windows 7",
-        "Windows 8",
-        "Windows 10",
-        "Windows 11",
-        "Debian",
-        "Fedora",
-      ]
-      // Função para verificar se o agente de usuário é um navegador de desktop
-      function isDesktop() {
-        let SOatual = platform.os.family
-        return desktopOS.some((browser) => SOatual.includes(browser))
-      }
-      if (isDesktop()) {
-        // Se for um dispositivo móvel, alterar a duração da animação
-        document.querySelector("body").style.animation =
-          "moverFundo 320s infinite alternate linear"
-      }
-    </script>
     <script src="./script.js"></script>
   </body>
   <!-- ...apagando os barros -->
+  <!-- Desenvolvido por Jota / José Guilherme Pandolfi -->
 </html>

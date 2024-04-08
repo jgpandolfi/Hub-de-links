@@ -8,7 +8,7 @@ Projeto de front-end desenvolvido e utilizado por mim como hub de links em minha
 
 ## 🚀 Tecnologias
 
-Esse projeto foi desenvolvido com as seguintes tecnologias:
+Esse projeto foi desenvolvido com o uso as seguintes tecnologias:
 
 - Figma
 - HTML
@@ -23,6 +23,23 @@ O projeto teve com intuito desenvolver um hub de links que pudesse ser utilizado
 Além de ter sido desenvolvido para uso próprio, sanando uma necessidade real do meu dia-a-dia, o projeto foi bastante importante para exercitar meus conhecimentos de front-end, envolvendo HTML, CSS e JavaScript.
 
 Também foi possível exercitar o uso de ferramentas como o Git, GitHub e Figma.
+
+## 💻 Recursos e funcionalidade:
+
+✅ Já implementado:
+● Modo escuro/claro
+● Plano de fundo animado
+● Box de dados do visitante
+● Microsoft Clarity
+● Hotjar
+
+🟡 Em desenvolvimento:
+● Avisos legais sobre dados
+
+Não iniciado:
+● Banco de dados próprios para insights
+● Facebook pixel
+● Google Analytics
 
 ## :memo: Licença
 
