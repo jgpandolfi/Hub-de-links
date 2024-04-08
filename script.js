@@ -62,7 +62,7 @@ function obterBrowser() {
 
 // Obter ISP do usuário
 function obterISP() {
-  fetch("https://ipapi.co/json/")
+  fetch("https://ipinfo.io/json")
     .then((response) => response.json())
     .then((data) => {
       document.getElementById("ISP").innerText = data.org
