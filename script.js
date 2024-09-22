@@ -107,25 +107,25 @@ if (utmSource) {
 // Funções para alteração no idioma do conteúdo da página
 function trocarConteudoParaEN() {
   const iBemVindo = document.querySelector("#iBemVindo")
-  iBemVindo.innerHTML = "Welcome to my link hub!"
+  iBemVindo.textContent = "Welcome to my link hub!"
 
   const iSuasInfos = document.querySelector("#iSuasInfos")
-  iSuasInfos.innerHTML = "Your data:"
+  iSuasInfos.textContent = "Your data:"
 
   const sProvedor = document.querySelector("#sProvedor")
-  sProvedor.innerHTML = "ISP:"
+  sProvedor.textContent = "ISP:"
 
   const sLoc = document.querySelector("#sLoc")
-  sLoc.innerHTML = "Location:"
+  sLoc.textContent = "Location:"
 
   const sSO = document.querySelector("#sSO")
-  sSO.innerHTML = "Operating system:"
+  sSO.textContent = "Operating system:"
 
   const sVindoDe = document.querySelector("#sVindoDe")
-  sVindoDe.innerHTML = "Referred from:"
+  sVindoDe.textContent = "Referred from:"
 
   const fDesenvolvidoPor = document.querySelector("#fDesenvolvidoPor")
-  fDesenvolvidoPor.innerHTML = "Developed by Jota / José Guilherme Pandolfi"
+  fDesenvolvidoPor.textContent = "Developed by Jota / José Guilherme Pandolfi"
 
   const aPerfilDio = document.querySelector("#aPerfilDio")
   aPerfilDio.innerHTML =
@@ -136,32 +136,33 @@ function trocarConteudoParaEN() {
     '<ion-icon name="play-circle-outline"></ion-icon>Playlist Brazilian Rock 2000'
 
   const utmTexto = document.querySelector("#UTM")
-  if (utmTexto.innerHTML == "Tráfego direto") {
-    utmTexto.innerHTML = "Direct traffic"
+  if (utmTexto.textContent == "Tráfego direto") {
+    utmTexto.textContent = "Direct traffic"
   }
 }
 
 function trocarConteudoParaPT() {
   const pBemVindo = document.querySelector("#iBemVindo")
-  pBemVindo.innerHTML = "Bem-vindo ao meu hub de links!"
+  pBemVindo.textContent = "Bem-vindo ao meu hub de links!"
 
   const iSuasInfos = document.querySelector("#iSuasInfos")
-  iSuasInfos.innerHTML = "Suas informações:"
+  iSuasInfos.textContent = "Suas informações:"
 
   const sProvedor = document.querySelector("#sProvedor")
-  sProvedor.innerHTML = "Provedor:"
+  sProvedor.textContent = "Provedor:"
 
   const sLoc = document.querySelector("#sLoc")
-  sLoc.innerHTML = "Localização:"
+  sLoc.textContent = "Localização:"
 
   const sSO = document.querySelector("#sSO")
-  sSO.innerHTML = "Sistema operacional:"
+  sSO.textContent = "Sistema operacional:"
 
   const sVindoDe = document.querySelector("#sVindoDe")
-  sVindoDe.innerHTML = "Vindo de:"
+  sVindoDe.textContent = "Vindo de:"
 
   const fDesenvolvidoPor = document.querySelector("#fDesenvolvidoPor")
-  fDesenvolvidoPor.innerHTML = "Desenvolvido por Jota / José Guilherme Pandolfi"
+  fDesenvolvidoPor.textContent =
+    "Desenvolvido por Jota / José Guilherme Pandolfi"
 
   const aPerfilDio = document.querySelector("#aPerfilDio")
   aPerfilDio.innerHTML =
@@ -172,8 +173,8 @@ function trocarConteudoParaPT() {
     '<ion-icon name="play-circle-outline"></ion-icon>Playlist Rock 2000 Nacional'
 
   const utmTexto = document.querySelector("#UTM")
-  if (utmTexto.innerHTML == "Direct traffic") {
-    utmTexto.innerHTML = "Tráfego direto"
+  if (utmTexto.textContent == "Direct traffic") {
+    utmTexto.textContent = "Tráfego direto"
   }
 }
 
@@ -190,11 +191,11 @@ let imgIdiomaNaoSelecionado = document.querySelector(".imgIdiomaNaoSelecionado")
 function trocarParaEN() {
   imgIdiomaSelecionado.src = "https://flagcdn.com/w160/us.png"
   imgIdiomaSelecionado.srcset = "https://flagcdn.com/w160/us.png 2x"
-  idiomaSelecionado.innerHTML = "EN-US"
+  idiomaSelecionado.textContent = "EN-US"
 
   imgIdiomaNaoSelecionado.src = "https://flagcdn.com/w160/br.png"
   imgIdiomaNaoSelecionado.srcset = "https://flagcdn.com/w320/br.png 2x"
-  idiomaNaoSelecionado.innerHTML = "PT-BR"
+  idiomaNaoSelecionado.textContent = "PT-BR"
 
   trocarConteudoParaEN()
 }
@@ -202,11 +203,11 @@ function trocarParaEN() {
 function trocarParaPT() {
   imgIdiomaSelecionado.src = "https://flagcdn.com/w160/br.png"
   imgIdiomaSelecionado.srcset = "https://flagcdn.com/w320/br.png 2x"
-  idiomaSelecionado.innerHTML = "PT-BR"
+  idiomaSelecionado.textContent = "PT-BR"
 
   imgIdiomaNaoSelecionado.src = "https://flagcdn.com/w160/us.png"
   imgIdiomaNaoSelecionado.srcset = "https://flagcdn.com/w160/us.png 2x"
-  idiomaNaoSelecionado.innerHTML = "EN-US"
+  idiomaNaoSelecionado.textContent = "EN-US"
 
   trocarConteudoParaPT()
 }
