@@ -1,10 +1,43 @@
+// Detectar se o visitante está usando um dispositivo móvel
+// para alterar o CSS (velocidade da animação de fundo)
+// Lista de Sistemas Operacionais conhecidos para desktop
+const desktopOS = [
+  "Windows",
+  "Windows Server",
+  "Windows XP",
+  "OS X",
+  "Ubuntu",
+  "Windows Vista",
+  "Windows 7",
+  "Windows 8",
+  "Windows 10",
+  "Windows 11",
+  "Debian",
+  "Fedora",
+]
+
+// Função para verificar se o "browser agent" é um navegador de desktop
+function isDesktop() {
+  let SOatual = platform.os.family
+  return desktopOS.some((browser) => SOatual.includes(browser))
+}
+
+if (isDesktop()) {
+  // Se for um dispositivo móvel, alterar a duração da animação
+  document.querySelector("body").style.animation =
+    "moverFundo 320s infinite alternate linear"
+}
+
+// ======================
 // Alternar modo escuro/claro
 function toggleMode() {
   const html = document.documentElement
   html.classList.toggle("light")
 }
 
-// Função para obter o endereço IP usando uma API de terceiros
+// ======================
+// Funções para box de informações do visitante
+// Função para obter o endereço IP do usuário usando uma API de terceiros
 function obterIP() {
   fetch("https://api.ipify.org?format=json")
     .then((response) => response.json())
@@ -70,7 +103,7 @@ function obterISP() {
     .catch((error) => console.error("Ocorreu um erro ao obter o ISP:", error))
 }
 
-// Obter geolocalização com base no endereço IP
+// Obter geolocalização do usuário com base no endereço IP
 function obterLoc() {
   fetch("https://ipapi.co/json/")
     .then((response) => response.json())
@@ -104,34 +137,35 @@ if (utmSource) {
   document.getElementById("UTM").innerText = "Tráfego direto"
 }
 
+// ======================
 // Funções para alteração no idioma do conteúdo da página
 function trocarConteudoParaEN() {
-  const iBemVindo = document.querySelector("#iBemVindo")
+  const iBemVindo = document.querySelector("#i-bem-vindo")
   iBemVindo.textContent = "Welcome to my link hub!"
 
-  const iSuasInfos = document.querySelector("#iSuasInfos")
+  const iSuasInfos = document.querySelector("#i-suas-infos")
   iSuasInfos.textContent = "Your data:"
 
-  const sProvedor = document.querySelector("#sProvedor")
+  const sProvedor = document.querySelector("#s-provedor")
   sProvedor.textContent = "ISP:"
 
-  const sLoc = document.querySelector("#sLoc")
+  const sLoc = document.querySelector("#s-loc")
   sLoc.textContent = "Location:"
 
-  const sSO = document.querySelector("#sSO")
+  const sSO = document.querySelector("#s-so")
   sSO.textContent = "Operating system:"
 
-  const sVindoDe = document.querySelector("#sVindoDe")
+  const sVindoDe = document.querySelector("#s-vindo-de")
   sVindoDe.textContent = "Referred from:"
 
-  const fDesenvolvidoPor = document.querySelector("#fDesenvolvidoPor")
+  const fDesenvolvidoPor = document.querySelector("#f-desenvolvido-por")
   fDesenvolvidoPor.textContent = "Developed by Jota / José Guilherme Pandolfi"
 
-  const aPerfilDio = document.querySelector("#aPerfilDio")
+  const aPerfilDio = document.querySelector("#a-perfil-dio")
   aPerfilDio.innerHTML =
     '<ion-icon name="ribbon-outline"></ion-icon> Dio.me profile'
 
-  const aRockNacional = document.querySelector("#aRockNacional")
+  const aRockNacional = document.querySelector("#a-rock-nacional")
   aRockNacional.innerHTML =
     '<ion-icon name="play-circle-outline"></ion-icon>Playlist Brazilian Rock 2000'
 
@@ -142,33 +176,33 @@ function trocarConteudoParaEN() {
 }
 
 function trocarConteudoParaPT() {
-  const pBemVindo = document.querySelector("#iBemVindo")
+  const pBemVindo = document.querySelector("#i-bem-vindo")
   pBemVindo.textContent = "Bem-vindo ao meu hub de links!"
 
-  const iSuasInfos = document.querySelector("#iSuasInfos")
+  const iSuasInfos = document.querySelector("#i-suas-infos")
   iSuasInfos.textContent = "Suas informações:"
 
-  const sProvedor = document.querySelector("#sProvedor")
+  const sProvedor = document.querySelector("#s-provedor")
   sProvedor.textContent = "Provedor:"
 
-  const sLoc = document.querySelector("#sLoc")
+  const sLoc = document.querySelector("#s-loc")
   sLoc.textContent = "Localização:"
 
-  const sSO = document.querySelector("#sSO")
+  const sSO = document.querySelector("#s-so")
   sSO.textContent = "Sistema operacional:"
 
-  const sVindoDe = document.querySelector("#sVindoDe")
+  const sVindoDe = document.querySelector("#s-vindo-de")
   sVindoDe.textContent = "Vindo de:"
 
-  const fDesenvolvidoPor = document.querySelector("#fDesenvolvidoPor")
+  const fDesenvolvidoPor = document.querySelector("#f-desenvolvido-por")
   fDesenvolvidoPor.textContent =
     "Desenvolvido por Jota / José Guilherme Pandolfi"
 
-  const aPerfilDio = document.querySelector("#aPerfilDio")
+  const aPerfilDio = document.querySelector("#a-perfil-dio")
   aPerfilDio.innerHTML =
     '<ion-icon name="ribbon-outline"></ion-icon>Perfil Dio.me'
 
-  const aRockNacional = document.querySelector("#aRockNacional")
+  const aRockNacional = document.querySelector("#a-rock-nacional")
   aRockNacional.innerHTML =
     '<ion-icon name="play-circle-outline"></ion-icon>Playlist Rock 2000 Nacional'
 
@@ -179,14 +213,16 @@ function trocarConteudoParaPT() {
 }
 
 // Seleção de idiomas via botão dropdown
-const btnIdioma = document.querySelector(".btnIdioma")
-const listaIdiomas = document.querySelector(".listaIdiomas")
+const btnIdioma = document.querySelector(".btn-idioma")
+const listaIdiomas = document.querySelector(".lista-idiomas")
 
-let idiomaSelecionado = document.querySelector(".idiomaSelecionado")
-let imgIdiomaSelecionado = document.querySelector(".imgIdiomaSelecionado")
+let idiomaSelecionado = document.querySelector(".idioma-selecionado")
+let imgIdiomaSelecionado = document.querySelector(".img-idioma-selecionado")
 
-let idiomaNaoSelecionado = document.querySelector(".idiomaNaoSelecionado")
-let imgIdiomaNaoSelecionado = document.querySelector(".imgIdiomaNaoSelecionado")
+let idiomaNaoSelecionado = document.querySelector(".idioma-nao-selecionado")
+let imgIdiomaNaoSelecionado = document.querySelector(
+  ".img-idioma-nao-selecionado"
+)
 
 function trocarParaEN() {
   imgIdiomaSelecionado.src = "https://flagcdn.com/w160/us.png"
@@ -213,7 +249,7 @@ function trocarParaPT() {
 }
 
 btnIdioma.addEventListener("click", () => {
-  listaIdiomas.classList.toggle("exibirListaIdiomas")
+  listaIdiomas.classList.toggle("exibir-lista-idiomas")
 })
 
 listaIdiomas.addEventListener("click", () => {
@@ -223,33 +259,6 @@ listaIdiomas.addEventListener("click", () => {
     trocarParaPT()
   }
 })
-
-// Detectar se o visitante está usando um dispositivo móvel para alterar CSS
-// Lista de Sistemas Operacionais conhecidos para desktop
-const desktopOS = [
-  "Windows",
-  "Windows Server",
-  "Windows XP",
-  "OS X",
-  "Ubuntu",
-  "Windows Vista",
-  "Windows 7",
-  "Windows 8",
-  "Windows 10",
-  "Windows 11",
-  "Debian",
-  "Fedora",
-]
-// Função para verificar se o agente de usuário é um navegador de desktop
-function isDesktop() {
-  let SOatual = platform.os.family
-  return desktopOS.some((browser) => SOatual.includes(browser))
-}
-if (isDesktop()) {
-  // Se for um dispositivo móvel, alterar a duração da animação
-  document.querySelector("body").style.animation =
-    "moverFundo 320s infinite alternate linear"
-}
 
 // Ajuste automático de idioma
 function autoAjusteIdioma() {

@@ -21,6 +21,8 @@
       content="Agência m2a, m2a, Hub, Hub de Links m2a, Hub de Links do Jota, José Guilherme Pandolfi, Pandolfi"
     />
     <meta name="author" content="Jota / José Guilherme Pandolfi" />
+
+    <!-- Chamar arquivo CSS -->
     <link rel="stylesheet" href="./style.css" />
 
     <!-- Tags para mídias sociais -->
@@ -68,31 +70,32 @@
   </head>
 
   <body>
-    <div id="container">
+    <!-- Container geral da página toda -->
+    <div id="container-geral">
       <!-- Botão switch de idiomas -->
-      <div class="containerIdioma">
-        <div class="btnIdioma">
-          <div class="btnWrapper">
+      <div class="container-idioma">
+        <div class="btn-idioma">
+          <div class="btn-wrapper">
             <img
               src="https://flagcdn.com/w160/br.png"
               srcset="https://flagcdn.com/w320/br.png 2x"
               width="28"
               alt="Idioma Português"
-              class="imgIdiomaSelecionado"
+              class="img-idioma-selecionado"
             />
-            <div class="idiomaSelecionado">PT-BR</div>
+            <div class="idioma-selecionado">PT-BR</div>
             <i class="ri-arrow-drop-down-fill seta"></i>
           </div>
-          <div class="listaIdiomas">
-            <div class="itensListaIdioma">
+          <div class="lista-idiomas">
+            <div class="itens-lista-idioma">
               <img
                 src="https://flagcdn.com/w160/us.png"
                 srcset="https://flagcdn.com/w320/us.png 2x"
                 width="28"
                 alt="English Language"
-                class="imgIdiomaNaoSelecionado"
+                class="img-idioma-nao-selecionado"
               />
-              <div class="idiomaNaoSelecionado">EN-US</div>
+              <div class="idioma-nao-selecionado">EN-US</div>
             </div>
           </div>
         </div>
@@ -106,7 +109,7 @@
           />
         </picture>
         <h1>Jota / José Guilherme Pandolfi</h1>
-        <p><i id="iBemVindo">Bem-vindo ao meu hub de links!</i></p>
+        <p><i id="i-bem-vindo">Bem-vindo ao meu hub de links!</i></p>
       </div>
       <div id="switch" onclick="toggleMode()">
         <button></button>
@@ -146,7 +149,7 @@
               href="https://www.dio.me/users/jgpandolfi"
               target="_blank"
               rel="noopener noreferrer"
-              id="aPerfilDio"
+              id="a-perfil-dio"
             >
               <ion-icon name="ribbon-outline"></ion-icon>Perfil Dio.me
             </a>
@@ -160,11 +163,6 @@
               <ion-icon name="logo-discord"></ion-icon>Discord
             </a>
           </li>
-          <!-- <li>
-            <a href="#" target="_blank">
-              <ion-icon name="logo-youtube"></ion-icon>YouTube
-            </a>
-          </li> -->
           <!-- <li>
             <a href="https://jgpandolfi.myportfolio.com/" target="_blank">
               <ion-icon name="images-outline"></ion-icon>Adobe Portfolio
@@ -221,7 +219,7 @@
               href="https://open.spotify.com/playlist/3YTa2SxUmVd7pnoJ2e1sn4?si=915a4102d15b4a66"
               target="_blank"
               rel="noopener noreferrer"
-              id="aRockNacional"
+              id="a-rock-nacional"
             >
               <ion-icon name="play-circle-outline"></ion-icon>Playlist Rock 2000
               Nacional
@@ -229,32 +227,23 @@
           </li>
         </ul>
       </div>
-      <!--
-      <p id="pInsights"><i>Insights desse hub:</i></p>
-      <ul>
-        <li>
-          <a href="https://www.linkedin.com/in/jgpandolfi/" target="_blank">
-            <ion-icon name="map-outline"></ion-icon>Mapa de calor
-          </a>
-        </li>
-      </ul>
-      -->
-      <p id="pInfoVisitante"><i id="iSuasInfos">Suas informações:</i></p>
-      <div id="boxInfo">
+      <!-- Box de informações do visitante -->
+      <p id="p-info-visitante"><i id="i-suas-infos">Suas informações:</i></p>
+      <div id="box-info">
         <div>
           <p><strong>IP:</strong></p>
           <p id="IP"></p>
         </div>
         <div>
-          <p><strong id="sProvedor">Provedor:</strong></p>
+          <p><strong id="s-provedor">Provedor:</strong></p>
           <p id="ISP"></p>
         </div>
         <div>
-          <p><strong id="sLoc">Localização:</strong></p>
+          <p><strong id="s-loc">Localização:</strong></p>
           <p id="loc"></p>
         </div>
         <div>
-          <p><strong id="sSO">Sistema operacional:</strong></p>
+          <p><strong id="s-so">Sistema operacional:</strong></p>
           <p id="SO"></p>
         </div>
         <div>
@@ -262,12 +251,12 @@
           <p id="browser"></p>
         </div>
         <div>
-          <p><strong id="sVindoDe">Vindo de:</strong></p>
+          <p><strong id="s-vindo-de">Vindo de:</strong></p>
           <p id="UTM"></p>
         </div>
       </div>
     </div>
-    <footer id="fDesenvolvidoPor">
+    <footer id="f-desenvolvido-por">
       Desenvolvido por Jota / José Guilherme Pandolfi
     </footer>
     <script

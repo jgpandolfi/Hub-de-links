@@ -1,9 +1,11 @@
+/* Reset de CSS - Evitar erros entre browsers */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Declarção de variáveis CSS "padrão" */
 :root {
   --text-color: white;
   --bg-url: url(./assets/bg-mobile.jpg);
@@ -14,6 +16,7 @@
   --button-background: white;
 }
 
+/* Declarção de variáveis CSS para o modo "light" */
 .light {
   --text-color: black;
   --bg-url: url(./assets/bg-mobile-light.jpg);
@@ -29,14 +32,8 @@
   filter: invert(1);
 }
 
+/* Configuração padrão do body */
 body {
-  /*
-  background-image: url(./assets/bg-mobile.jpg);
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: cover;
-  */
-
   background: var(--bg-url) no-repeat top center/cover;
   animation: moverFundo 30s infinite alternate linear;
 }
@@ -46,13 +43,55 @@ body * {
   color: var(--text-color);
 }
 
-#container {
+/* Media queries */
+@media (min-width) {
+  :root {
+    --bg-url: url(./assets/bg-desktop.jpg);
+  }
+
+  .light {
+    --bg-url: url(./assets/bg-desktop-light.jpg);
+  }
+}
+
+/* Animações com keyframes */
+@keyframes slide-in {
+  from {
+    left: 0;
+  }
+  to {
+    left: 50%;
+  }
+}
+
+@keyframes slide-out {
+  from {
+    left: 50%;
+  }
+  to {
+    left: 0%;
+  }
+}
+
+@keyframes moverFundo {
+  /* Animação para mover a imagem de plano de fundo */
+  from {
+    background-position: 0 0; /* Posição inicial da imagem */
+  }
+  to {
+    background-position: 100% 100%; /* Posição final da imagem */
+  }
+}
+
+/* Configuração do container geral - onde entra todo o conteúdo */
+#container-geral {
   width: 100%;
   max-width: 588px;
   margin: 56px auto 0px;
   padding: 0 24px;
 }
 
+/* Área que exibe foto e nome */
 #profile {
   transition: all 1s;
   text-align: center;
@@ -69,6 +108,12 @@ body * {
   margin-top: 8px;
 }
 
+h1 {
+  font-size: clamp(1em, 1em + 1vw, 1.5em);
+  margin-top: 14px;
+}
+
+/* Botão slider switch para troca de modos */
 #switch {
   position: relative;
   width: 64px;
@@ -110,8 +155,7 @@ body * {
   border-radius: 9999px;
 }
 
-/* links */
-
+/* Área dos links (estado inicial) */
 ul {
   list-style: none;
   display: flex;
@@ -155,95 +199,13 @@ footer {
   font-size: 12px;
 }
 
-/* media queries */
-@media (min-width) {
-  :root {
-    --bg-url: url(./assets/bg-desktop.jpg);
-  }
-
-  .light {
-    --bg-url: url(./assets/bg-desktop-light.jpg);
-  }
-}
-
-/* animation */
-@keyframes slide-in {
-  from {
-    left: 0;
-  }
-  to {
-    left: 50%;
-  }
-}
-
-@keyframes slide-out {
-  from {
-    left: 50%;
-  }
-  to {
-    left: 0%;
-  }
-}
-
-@keyframes moverFundo {
-  /* Animação para mover a imagem de plano de fundo */
-  from {
-    background-position: 0 0; /* Posição inicial da imagem */
-  }
-  to {
-    background-position: 100% 100%; /* Posição final da imagem */
-  }
-}
-
-h1 {
-  font-size: clamp(1em, 1em + 1vw, 1.5em);
-  margin-top: 14px;
-}
-
-/* #pInsights {
-  text-align: center;
-  padding: 44px 0 0;
-  font-size: 16px;
-} */
-
-#pInfoVisitante {
-  text-align: center;
-  padding: 44px 0 10px;
-  font-size: 16px;
-}
-
-#boxInfo {
-  display: block;
-  text-align: center;
-
-  padding: 16px 10px;
-
-  background: var(--surface-color);
-  border: 1px solid var(--stroke-color);
-  border-radius: 8px;
-
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-
-  text-decoration: none;
-  font-weight: 500;
-
-  transition: background 0.2s;
-}
-
-#boxInfo div {
+/* Estilos relacionados ao menu dropdown de idiomas */
+.container-idioma {
   display: flex;
-  justify-content: center;
-
-  padding: 2px 6px;
+  justify-content: flex-end;
 }
 
-#boxInfo div p {
-  font-size: 14px;
-  padding: 0 3px;
-}
-
-.btnIdioma {
+.btn-idioma {
   font-size: 10px;
   display: inline-block;
 
@@ -266,21 +228,15 @@ h1 {
   transition: background 0.2s;
 }
 
-.btnIdioma:hover {
-  /*pseudo-selector */
+.btn-idioma:hover {
   background: var(--surface-color-hover);
   border: 1.5px solid var(--text-color);
 }
 
-.btnWrapper {
+.btn-wrapper {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.containerIdioma {
-  display: flex;
-  justify-content: flex-end;
 }
 
 .seta {
@@ -288,7 +244,7 @@ h1 {
   margin-left: -10px;
 }
 
-.listaIdiomas {
+.lista-idiomas {
   position: absolute;
   top: 45px;
   left: 0;
@@ -310,20 +266,58 @@ h1 {
   display: none;
 }
 
-.exibirListaIdiomas {
-  display: flex;
-}
-
-.itensListaIdioma {
+.itens-lista-idioma {
   display: flex;
   align-items: center;
   padding: 0.3rem 0.61rem;
   gap: 0.5rem;
 }
 
-.itensListaIdioma:hover {
+.exibir-lista-idiomas {
+  display: flex;
+}
+
+.itens-lista-idioma:hover {
   /*pseudo-selector */
   background: var(--surface-color-hover);
   border: 1.5px solid var(--text-color);
   border-radius: 8px;
+}
+
+/* Estilos para o box de informações sobre o visitante */
+#p-info-visitante {
+  text-align: center;
+  padding: 44px 0 10px;
+  font-size: 16px;
+}
+
+#box-info {
+  display: block;
+  text-align: center;
+
+  padding: 16px 10px;
+
+  background: var(--surface-color);
+  border: 1px solid var(--stroke-color);
+  border-radius: 8px;
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  text-decoration: none;
+  font-weight: 500;
+
+  transition: background 0.2s;
+}
+
+#box-info div {
+  display: flex;
+  justify-content: center;
+
+  padding: 2px 6px;
+}
+
+#box-info div p {
+  font-size: 14px;
+  padding: 0 3px;
 }
