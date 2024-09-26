@@ -27,7 +27,7 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li>JavaScript</li>
 <li>Figma</li>
 <li>Git e Github</li>
-<ul>
+</ul>
 
 <p>No âmbito das tecnologias anteriores, foram utilizados os seguintes recursos e práticas:</p>
 
@@ -48,12 +48,12 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li>Uso de expressões regulares (Regex)</li>
 <li>Gerenciamento de estado com classes CSS</li>
 <li>catch() e fetch() para tratamento de erros</li>
-<ul>
+</ul>
 
 ## 💻 Recursos e funcionalidades
 
 <p>🟢 Já implementado:</p>
-
+<ul>
 <li><b>Responsividade:</b> layout adaptativo a diferentes telas e dispositivos</li>
 <li><b>Modo escuro/claro:</b> o visitante pode ajustar a luminosidade entre os dois modos</li>
 <li><b>Plano de fundo animado:</b> imagem de fundo dinâmica</li>
@@ -61,19 +61,22 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Microsoft Clarity:</b> acompanhamento dos acessos a página</li>
 <li><b>Ajuste manual de idioma português/inglês:</b> o visitante é capaz de alternar os idiomas</li>
 <li><b>Portfólio de imagens (SPA):</b> há um portfólio dinâmico com imagens de design gráfico</li>
+</ul>
 
 <p>🟡 Em desenvolvimento:</p>
-
+<ul>
 <li><b>Avisos legais sobre dados:</b> pop-up com dizeres compatíveis com a LGPD</li>
 <li><b>Ajuste automático de idioma:</b> falantes de português seriam ajustados automaticamente para esse idioma</li>
+</ul>
 
 <p>🔴 Não iniciado:</p>
-
+<ul>
 <li><b>Banco de dados próprios para insights:</b> armazenamento de número de cliques em cada botão</li>
 <li><b>Facebook Pixel:</b> para eventuais campanhas de anúncios pagos</li>
 <li><b>Google Analytics:</b> para melhor acompanhamento da experiência do usuário</li>
 <li><b>Botão e página (em SPA) de projetos:</b> para que o usuário possa conhecer outros projetos de desenvolvimento web que estou empenhado</li>
 <li><b>Barra de pesquisa no portfólio de imagens:</b> para facilitar a busca por imagens relacionadas a segmentos específicos</li>
+</ul>
 
 ## :memo: Licença
 
