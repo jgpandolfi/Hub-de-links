@@ -42,7 +42,7 @@ function obterIP() {
   fetch("https://api.ipify.org?format=json")
     .then((response) => response.json())
     .then((data) => {
-      document.getElementById("IP").innerText = data.ip
+      document.getElementById("IP").textContent = data.ip
     })
     .catch((error) =>
       console.error("Ocorreu um erro ao obter o endereço IP:", error)
@@ -51,7 +51,7 @@ function obterIP() {
 
 // Função para obter o SO do usuário
 function obterSO() {
-  document.getElementById("SO").innerText = platform.os.family
+  document.getElementById("SO").textContent = platform.os.family
 }
 
 // Função para obter o browser do usuário
@@ -98,7 +98,7 @@ function obterISP() {
   fetch("https://ipinfo.io/json")
     .then((response) => response.json())
     .then((data) => {
-      document.getElementById("ISP").innerText = data.org
+      document.getElementById("ISP").textContent = data.org
     })
     .catch((error) => console.error("Ocorreu um erro ao obter o ISP:", error))
 }
@@ -110,7 +110,7 @@ function obterLoc() {
     .then((data) => {
       document.getElementById(
         "loc"
-      ).innerText = `${data.city}, ${data.region}, ${data.country_name}`
+      ).textContent = `${data.city}, ${data.region}, ${data.country_name}`
     })
     .catch((error) =>
       console.error("Ocorreu um erro ao obter a localização:", error)
@@ -132,9 +132,9 @@ function getParameterByName(name, url) {
 let utmSource = getParameterByName("utm_source")
 // Exibir a origem do tráfego
 if (utmSource) {
-  document.getElementById("UTM").innerText = utmSource
+  document.getElementById("UTM").textContent = utmSource
 } else {
-  document.getElementById("UTM").innerText = "Tráfego direto"
+  document.getElementById("UTM").textContent = "Tráfego direto"
 }
 
 // ======================
