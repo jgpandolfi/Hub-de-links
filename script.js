@@ -213,14 +213,15 @@ function trocarConteudoParaPT() {
 }
 
 // Seleção de idiomas via botão dropdown
+// Identificar e selecionar as tags HTML
 const btnIdioma = document.querySelector(".btn-idioma")
 const listaIdiomas = document.querySelector(".lista-idiomas")
 
-let idiomaSelecionado = document.querySelector(".idioma-selecionado")
-let imgIdiomaSelecionado = document.querySelector(".img-idioma-selecionado")
+const idiomaSelecionado = document.querySelector(".idioma-selecionado")
+const imgIdiomaSelecionado = document.querySelector(".img-idioma-selecionado")
 
-let idiomaNaoSelecionado = document.querySelector(".idioma-nao-selecionado")
-let imgIdiomaNaoSelecionado = document.querySelector(
+const idiomaNaoSelecionado = document.querySelector(".idioma-nao-selecionado")
+const imgIdiomaNaoSelecionado = document.querySelector(
   ".img-idioma-nao-selecionado"
 )
 
@@ -294,6 +295,78 @@ window.onload = function () {
   obterISP()
   obterLoc()
   autoAjusteIdioma()
+}
+
+// ============
+// Recurso para exibir e ocultar o portfólio de design para social media
+// Identificar e selecionar o botão utilizado para acessar o portfólio
+const btnPortfolio = document.getElementById("btn-portfolio")
+
+// Identificar e selecionar o botão utilizado para voltar aos links (estado inicial)
+const btnVoltarParaLinks = document.getElementById("btn-voltar-para-links")
+
+// Identificar e selecionar os containers que devem ser exibidos/ocultados
+const divLinks = document.getElementById("container-links")
+const divPortfolio = document.getElementById("container-portfolio")
+
+// Criar a função para executar as ações desejadas para abertura do portfólio
+function abrirPortfolio() {
+  divLinks.style.display = "none"
+  divPortfolio.style.display = "block"
+
+  history.replaceState(null, "Porfólio de Design", "/portfolio-design")
+}
+
+// Criar a função para executar as ações desejadas para voltar aos links (estado inicial)
+function fecharPortfolio() {
+  divPortfolio.style.display = "none"
+  divLinks.style.display = "block"
+
+  history.replaceState(null, "", "/inicial")
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
+// Adicionar um listener de clique no botão para ir ao portfólio de design
+btnPortfolio.addEventListener("click", () => {
+  abrirPortfolio()
+})
+
+// Adicionar um listener de clique no botão para voltar aos links (estado inicial)
+btnVoltarParaLinks.addEventListener("click", () => {
+  fecharPortfolio()
+})
+
+// =============
+// Modal (janela flutuante) para exibir imagem do portfólio ampliada
+// Identifica e seleciona a div do modal
+const divModal = document.getElementById("modal")
+
+// Obtém a imagem dentro do grid e o elemento modal que exibirá a imagem ampliada
+const imgsParaModal = document.querySelectorAll(".img-para-modal")
+const imgModalSrcset = document.getElementById("img-modal-srcset")
+const imgModal = document.getElementById("img-modal")
+const divLegendaParaModal = document.getElementById("legenda-img-modal")
+
+// Para cada imagem no grid, adiciona um evento de clique
+imgsParaModal.forEach((img) => {
+  img.onclick = function () {
+    divModal.style.display = "block" // Exibe o modal
+    imgModalSrcset.srcset = this.src.replace(".jpg", ".webp") // Seta o srcset da tag <source>
+    imgModal.src = this.src // Seta a imagem no modal
+    divLegendaParaModal.textContent = this.alt // Seta a descrição no modal
+  }
+})
+
+// Identifica e seleciona o botão de fechar (X) do modal
+const btnFecharModal = document.getElementById("btn-fechar-modal")
+
+// Quando o botão (X) é clicado, fecha o modal
+btnFecharModal.onclick = function () {
+  divModal.style.display = "none"
 }
 
 // Desenvolvido por Jota / José Guilherme Pandolfi

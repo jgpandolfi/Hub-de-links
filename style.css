@@ -83,6 +83,15 @@ body * {
   }
 }
 
+@keyframes zoom {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 /* Configuração do container geral - onde entra todo o conteúdo */
 #container-geral {
   width: 100%;
@@ -117,7 +126,6 @@ h1 {
 #switch {
   position: relative;
   width: 64px;
-
   margin: 4px auto;
 }
 
@@ -161,10 +169,10 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-top: 24px;
+  margin-top: 24px;
 }
 
-ul li a {
+ul li .botao {
   display: flex;
   justify-content: center;
 
@@ -183,8 +191,9 @@ ul li a {
   transition: background 0.2s;
 }
 
-ul li a:hover {
+ul li .botao:hover {
   /*pseudo-selector */
+  cursor: pointer;
   background: var(--surface-color-hover);
   border: 1.5px solid var(--text-color);
 }
@@ -320,4 +329,85 @@ footer {
 #box-info div p {
   font-size: 14px;
   padding: 0 3px;
+}
+
+/* Estilos relacionados a galeria de imagens de portfólio de social media */
+#container-portfolio {
+  display: none;
+}
+
+#p-titulo-portfolio {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 16px;
+}
+
+#grid-portfolio {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-gap: 10px;
+}
+
+.item-portfolio {
+  display: flex;
+  align-items: center;
+  picture {
+    transition: transform 0.3s ease; /* Transição suave para quando ocorrer o hover */
+    img {
+      cursor: pointer;
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover; /* Mantém a proporção da imagem */
+    }
+  }
+}
+
+.item-portfolio picture:hover {
+  transform: scale(1.05);
+}
+
+/* Estilos do modal (janela flutuante) para exibir imagem do portfólio ampliada */
+#modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro com transparência */
+}
+
+#img-modal {
+  margin: auto;
+  margin-top: 100px;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+#legenda-img-modal {
+  margin: auto;
+  display: block;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+}
+
+#btn-fechar-modal {
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  color: white;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#img-modal,
+#btn-fechar-modal {
+  animation-name: zoom;
+  animation-duration: 0.6s;
 }
