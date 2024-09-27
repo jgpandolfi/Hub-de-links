@@ -58,7 +58,7 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Modo escuro/claro:</b> o visitante pode ajustar a luminosidade entre os dois modos</li>
 <li><b>Plano de fundo animado:</b> imagem de fundo dinâmica</li>
 <li><b>Box de dados do visitante:</b> são exibidas informações como IP, endereço físico local, provedor, etc</li>
-<li><b>Microsoft Clarity:</b> acompanhamento dos acessos a página</li>
+<li><b>Microsoft Clarity e Hotjar:</b> acompanhamento dos acessos a página</li>
 <li><b>Ajuste manual de idioma português/inglês:</b> o visitante é capaz de alternar os idiomas</li>
 <li><b>Portfólio de imagens (SPA):</b> há um portfólio dinâmico com imagens de design gráfico</li>
 </ul>
