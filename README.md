@@ -61,11 +61,11 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Microsoft Clarity, Hotjar e PostHog:</b> acompanhamento de acessos e do uso do produto</li>
 <li><b>Ajuste manual de idioma português/inglês:</b> o visitante é capaz de alternar os idiomas</li>
 <li><b>Portfólio de imagens (SPA):</b> há um portfólio dinâmico com imagens de design gráfico</li>
+<li><b>Avisos legais sobre dados:</b> pop-up com dizeres compatíveis com a LGPD e páginas de política de privacidade</li>
 </ul>
 
 <p>🟡 Em desenvolvimento:</p>
 <ul>
-<li><b>Avisos legais sobre dados:</b> pop-up com dizeres compatíveis com a LGPD</li>
 <li><b>Ajuste automático de idioma:</b> falantes de português seriam ajustados automaticamente para esse idioma</li>
 </ul>
 

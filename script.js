@@ -369,4 +369,25 @@ btnFecharModal.onclick = function () {
   divModal.style.display = "none"
 }
 
+// =============
+// Política de privacidade
+// Seleciona os botões de Aceitar e Recusar
+const btnAceitar = document.getElementById("btn-aceitar")
+const btnRecusar = document.getElementById("btn-recusar")
+
+// Adiciona os listeners para os botões de "Aceitar" e de "Recusar"
+btnAceitar.addEventListener("click", aceitar)
+btnRecusar.addEventListener("click", recusar)
+
+// Funções para os botões do pop-up sobre política de privacidade
+function aceitar() {
+  // Remove o pop-up da página e permite a navegação normal
+  document.getElementById("popup-container").style.display = "none"
+}
+
+function recusar() {
+  // Redireciona o usuário para fora do site
+  window.location.href = "https://www.google.com"
+}
+
 // Desenvolvido por Jota / José Guilherme Pandolfi
