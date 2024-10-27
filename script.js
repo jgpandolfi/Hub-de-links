@@ -288,14 +288,14 @@ function autoAjusteIdioma() {
 }
 
 // Chamar funções no carregamento da página
-window.onload = function () {
+document.addEventListener("DOMContentLoaded", function () {
   obterIP()
   obterSO()
   obterBrowser()
   obterISP()
   obterLoc()
   autoAjusteIdioma()
-}
+})
 
 // ============
 // Recurso para exibir e ocultar o portfólio de design para social media
