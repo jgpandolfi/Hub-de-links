@@ -266,17 +266,18 @@ function autoAjusteIdioma() {
   fetch("https://ipapi.co/json/")
     .then((response) => response.json())
     .then((data) => {
-      paisOrigem = data.country_name
-      if (
-        paisOrigem == "Brazil" ||
-        "Brasil" ||
-        "brazil" ||
-        "brasil" ||
-        "BR" ||
-        "br" ||
-        "Portugal" ||
-        "portugal"
-      ) {
+      const paisOrigem = data.country_name
+      const paisesPortugues = [
+        "Brazil",
+        "Brasil",
+        "brazil",
+        "brasil",
+        "BR",
+        "br",
+        "Portugal",
+        "portugal",
+      ]
+      if (paisesPortugues.includes(paisOrigem)) {
         trocarParaPT()
       } else {
         trocarParaEN()
