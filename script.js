@@ -148,12 +148,26 @@ const sLoc = document.getElementById("s-loc")
 const sSO = document.getElementById("s-so")
 const sVindoDe = document.getElementById("s-vindo-de")
 const fDesenvolvidoPor = document.getElementById("f-desenvolvido-por")
+// O btn-portfolio já foi selecionado e salvo em btnPortfolio
 const aPerfilDio = document.getElementById("a-perfil-dio")
 const aRockNacional = document.getElementById("a-rock-nacional")
 const utmTexto = document.getElementById("UTM")
+const h2Popup = document.getElementById("h2-popup")
+const pPopup = document.getElementById("p-popup")
+// Os botões do popup já foram selecionados e salvos em btn-aceitar e btn-recusar
 
 // Funções para alteração no idioma do conteúdo da página
 function trocarConteudoParaEN() {
+  h2Popup.textContent = "Privacy Policy"
+  pPopup.innerHTML =
+    'This site uses browsing data. To continue, please read and accept our <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.'
+  btnAceitar.textContent = "Accept"
+  btnRecusar.textContent = "Decline"
+  btnPortfolio.innerHTML = '<ion-icon name="images"></ion-icon>Design Portfolio'
+  aPerfilDio.innerHTML =
+    '<ion-icon name="ribbon-outline"></ion-icon> Dio.me profile'
+  aRockNacional.innerHTML =
+    '<ion-icon name="play-circle-outline"></ion-icon>Playlist Brazilian Rock 2000'
   iBemVindo.textContent = "Welcome to my link hub!"
   iSuasInfos.textContent = "Your data:"
   sProvedor.textContent = "ISP:"
@@ -161,16 +175,22 @@ function trocarConteudoParaEN() {
   sSO.textContent = "Operating system:"
   sVindoDe.textContent = "Referred from:"
   fDesenvolvidoPor.textContent = "Developed by Jota / José Guilherme Pandolfi"
-  aPerfilDio.innerHTML =
-    '<ion-icon name="ribbon-outline"></ion-icon> Dio.me profile'
-  aRockNacional.innerHTML =
-    '<ion-icon name="play-circle-outline"></ion-icon>Playlist Brazilian Rock 2000'
   if (utmTexto.textContent == "Tráfego direto") {
     utmTexto.textContent = "Direct traffic"
   }
 }
 
 function trocarConteudoParaPT() {
+  h2Popup.textContent = "Política de Privacidade"
+  pPopup.innerHTML =
+    'Este site utiliza dados de navegação. Para continuar, leia e aceite nossa <a href="privacidade.html" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>.'
+  btnAceitar.textContent = "Aceitar"
+  btnRecusar.textContent = "Recusar"
+  btnPortfolio.innerHTML = '<ion-icon name="images"></ion-icon>Portfólio Design'
+  aPerfilDio.innerHTML =
+    '<ion-icon name="ribbon-outline"></ion-icon>Perfil Dio.me'
+  aRockNacional.innerHTML =
+    '<ion-icon name="play-circle-outline"></ion-icon>Playlist Rock 2000 Nacional'
   iBemVindo.textContent = "Bem-vindo ao meu hub de links!"
   iSuasInfos.textContent = "Suas informações:"
   sProvedor.textContent = "Provedor:"
@@ -179,10 +199,6 @@ function trocarConteudoParaPT() {
   sVindoDe.textContent = "Vindo de:"
   fDesenvolvidoPor.textContent =
     "Desenvolvido por Jota / José Guilherme Pandolfi"
-  aPerfilDio.innerHTML =
-    '<ion-icon name="ribbon-outline"></ion-icon>Perfil Dio.me'
-  aRockNacional.innerHTML =
-    '<ion-icon name="play-circle-outline"></ion-icon>Playlist Rock 2000 Nacional'
   if (utmTexto.textContent == "Direct traffic") {
     utmTexto.textContent = "Tráfego direto"
   }
