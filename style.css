@@ -92,6 +92,40 @@ body * {
   }
 }
 
+/* Container da barra de progresso */
+#barra-carregamento-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px; /* Altura da barra */
+  background-color: #e0e0e000; /* Cor do fundo (transparente) */
+  z-index: 1000; /* Mantém a barra acima do conteúdo */
+}
+
+#barra-carregamento {
+  height: 100%;
+  width: 0%; /* Começa com largura 0 */
+  background-color: #ff0080; /* Cor da barra de progresso */
+  transition: width 0.4s ease-in-out; /* Animação suave da barra */
+  border-radius: 10px;
+}
+
+#barra-carregamento::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2); /* Brilho suave */
+  opacity: 0;
+  transition: opacity 0.3s ease; /* Animação suave da opacidade */
+  border-radius: 10px; /* Mantém o brilho arredondado */
+}
+
+#barra-carregamento-container:hover #barra-carregamento::after {
+  opacity: 1; /* Brilho aparece ao passar o mouse */
+}
+
 /* Pop-up de políticas de privacidade */
 #popup-container {
   position: fixed;

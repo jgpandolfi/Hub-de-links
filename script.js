@@ -308,6 +308,8 @@ function abrirPortfolio() {
   divPortfolio.style.display = "block"
 
   history.replaceState(null, "Porfólio de Design", "/portfolio-design")
+
+  acompanharCarregamentoImgs()
 }
 
 // Criar a função para executar as ações desejadas para voltar aos links (estado inicial)
@@ -315,7 +317,7 @@ function fecharPortfolio() {
   divPortfolio.style.display = "none"
   divLinks.style.display = "block"
 
-  history.replaceState(null, "", "/inicial")
+  history.replaceState(null, "", "")
 
   window.scrollTo({
     top: 0,
@@ -332,6 +334,47 @@ btnPortfolio.addEventListener("click", () => {
 btnVoltarParaLinks.addEventListener("click", () => {
   fecharPortfolio()
 })
+
+// =============
+// Barra de carregamento para acompanhar o status de carregamento das imagens do portfólio
+// Função para monitorar o carregamento das imagens
+function acompanharCarregamentoImgs() {
+  // Seleciona todas as imagens do portfólio e descobre quantas são no total (length)
+  const imagensPortfolio = document.querySelectorAll(".img-para-modal")
+  const numeroDeImagensPortfolio = imagensPortfolio.length
+  // Seleciona os elementos HTML da barra de carregamento
+  const barraCarregamentoContainer = document.getElementById(
+    "barra-carregamento-container"
+  )
+  const barraCarregamento = document.getElementById("barra-carregamento")
+
+  // Inicializa o percentual de carregamento e joga o status para a barra
+  let percentualCarregamento = 20
+  barraCarregamento.style.width = percentualCarregamento + "%"
+
+  // Inicializa o número de imagens carregadas na situação inicial para zero
+  let numeroDeImagensCarregadas = 0
+
+  // Para cada imagem do portfólio vamos colocar um listener de evento "load"
+  imagensPortfolio.forEach((img) =>
+    // Configura o event listener que deve ser inserido
+    img.addEventListener("load", function () {
+      // Cada vez que um imagem disparar "carregamento completo"
+      // será atualizada o número total de imgs carregadas e o percentual (começa em 20%)
+      numeroDeImagensCarregadas += 1
+      percentualCarregamento =
+        (numeroDeImagensCarregadas / numeroDeImagensPortfolio) * 80 + 20
+      barraCarregamento.style.width = percentualCarregamento + "%"
+
+      // Se todas as imagens estiverem sido carregadas, vamos sumir com a barra de carregamento
+      if (numeroDeImagensCarregadas === numeroDeImagensPortfolio) {
+        setTimeout(() => {
+          barraCarregamento.style.display = "none"
+        }, 1000)
+      }
+    })
+  )
+}
 
 // =============
 // Modal (janela flutuante) para exibir imagem do portfólio ampliada
