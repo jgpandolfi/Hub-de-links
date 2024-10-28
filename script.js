@@ -138,75 +138,51 @@ if (utmSource) {
 }
 
 // ======================
+// Autolang
+// Troca do idioma do conteúdo exibido
+// Seleção e declaração de elementos HTML que serão traduzidos
+const iBemVindo = document.getElementById("i-bem-vindo")
+const iSuasInfos = document.getElementById("i-suas-infos")
+const sProvedor = document.getElementById("s-provedor")
+const sLoc = document.getElementById("s-loc")
+const sSO = document.getElementById("s-so")
+const sVindoDe = document.getElementById("s-vindo-de")
+const fDesenvolvidoPor = document.getElementById("f-desenvolvido-por")
+const aPerfilDio = document.getElementById("a-perfil-dio")
+const aRockNacional = document.getElementById("a-rock-nacional")
+const utmTexto = document.getElementById("UTM")
+
 // Funções para alteração no idioma do conteúdo da página
 function trocarConteudoParaEN() {
-  const iBemVindo = document.querySelector("#i-bem-vindo")
   iBemVindo.textContent = "Welcome to my link hub!"
-
-  const iSuasInfos = document.querySelector("#i-suas-infos")
   iSuasInfos.textContent = "Your data:"
-
-  const sProvedor = document.querySelector("#s-provedor")
   sProvedor.textContent = "ISP:"
-
-  const sLoc = document.querySelector("#s-loc")
   sLoc.textContent = "Location:"
-
-  const sSO = document.querySelector("#s-so")
   sSO.textContent = "Operating system:"
-
-  const sVindoDe = document.querySelector("#s-vindo-de")
   sVindoDe.textContent = "Referred from:"
-
-  const fDesenvolvidoPor = document.querySelector("#f-desenvolvido-por")
   fDesenvolvidoPor.textContent = "Developed by Jota / José Guilherme Pandolfi"
-
-  const aPerfilDio = document.querySelector("#a-perfil-dio")
   aPerfilDio.innerHTML =
     '<ion-icon name="ribbon-outline"></ion-icon> Dio.me profile'
-
-  const aRockNacional = document.querySelector("#a-rock-nacional")
   aRockNacional.innerHTML =
     '<ion-icon name="play-circle-outline"></ion-icon>Playlist Brazilian Rock 2000'
-
-  const utmTexto = document.querySelector("#UTM")
   if (utmTexto.textContent == "Tráfego direto") {
     utmTexto.textContent = "Direct traffic"
   }
 }
 
 function trocarConteudoParaPT() {
-  const pBemVindo = document.querySelector("#i-bem-vindo")
-  pBemVindo.textContent = "Bem-vindo ao meu hub de links!"
-
-  const iSuasInfos = document.querySelector("#i-suas-infos")
+  iBemVindo.textContent = "Bem-vindo ao meu hub de links!"
   iSuasInfos.textContent = "Suas informações:"
-
-  const sProvedor = document.querySelector("#s-provedor")
   sProvedor.textContent = "Provedor:"
-
-  const sLoc = document.querySelector("#s-loc")
   sLoc.textContent = "Localização:"
-
-  const sSO = document.querySelector("#s-so")
   sSO.textContent = "Sistema operacional:"
-
-  const sVindoDe = document.querySelector("#s-vindo-de")
   sVindoDe.textContent = "Vindo de:"
-
-  const fDesenvolvidoPor = document.querySelector("#f-desenvolvido-por")
   fDesenvolvidoPor.textContent =
     "Desenvolvido por Jota / José Guilherme Pandolfi"
-
-  const aPerfilDio = document.querySelector("#a-perfil-dio")
   aPerfilDio.innerHTML =
     '<ion-icon name="ribbon-outline"></ion-icon>Perfil Dio.me'
-
-  const aRockNacional = document.querySelector("#a-rock-nacional")
   aRockNacional.innerHTML =
     '<ion-icon name="play-circle-outline"></ion-icon>Playlist Rock 2000 Nacional'
-
-  const utmTexto = document.querySelector("#UTM")
   if (utmTexto.textContent == "Direct traffic") {
     utmTexto.textContent = "Tráfego direto"
   }
