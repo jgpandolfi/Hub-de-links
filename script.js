@@ -389,21 +389,23 @@ const divLegendaParaModal = document.getElementById("legenda-img-modal")
 
 // Para cada imagem no grid, adiciona um evento de clique
 imgsParaModal.forEach((img) => {
-  img.onclick = function () {
+  img.addEventListener("click", function () {
     divModal.style.display = "block" // Exibe o modal
     imgModalSrcset.srcset = this.src.replace(".jpg", ".webp") // Seta o srcset da tag <source>
     imgModal.src = this.src // Seta a imagem no modal
     divLegendaParaModal.textContent = this.alt // Seta a descrição no modal
-  }
+    document.body.classList.add("desativar-scroll") // Bloqueia o scroll do mouse
+  })
 })
 
 // Identifica e seleciona o botão de fechar (X) do modal
 const btnFecharModal = document.getElementById("btn-fechar-modal")
 
 // Quando o botão (X) é clicado, fecha o modal
-btnFecharModal.onclick = function () {
-  divModal.style.display = "none"
-}
+btnFecharModal.addEventListener("click", function () {
+  divModal.style.display = "none" // Fecha o modal
+  document.body.classList.remove("desativar-scroll") // Libera o scroll do fundo
+})
 
 // =============
 // Política de privacidade

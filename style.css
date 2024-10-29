@@ -453,6 +453,11 @@ footer {
   transform: scale(1.05);
 }
 
+/* Classe para desativar o scroll no body (utilizda em modais) */
+.desativar-scroll {
+  overflow: hidden;
+}
+
 /* Estilos do modal (janela flutuante) para exibir imagem do portfólio ampliada */
 #modal {
   display: none;
