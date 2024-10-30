@@ -592,12 +592,38 @@
       </div>
       <!-- Modal imagem clicada (janela flutuante para exibir imagem do portfólio ampliada) -->
       <div id="modal">
-        <span id="btn-fechar-modal">&times;</span>
+        <!-- Botão fechar modal -->
+        <button
+          id="btn-fechar-modal"
+          class="botoes-modal"
+          aria-label="Fechar imagem expandida"
+          title="Fechar imagem expandida."
+        >
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+        <!-- Botão imagem anterior -->
+        <button
+          id="btn-img-anterior-modal"
+          class="botoes-modal"
+          aria-label="Imagem anterior"
+          title="Imagem anterior"
+        >
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
         <picture>
           <source id="img-modal-srcset" type="image/webp" />
           <img id="img-modal" loading="lazy" />
         </picture>
-        <div id="legenda-img-modal"></div>
+        <p id="legenda-img-modal"></p>
+        <!-- Botão imagem seguinte -->
+        <button
+          id="btn-img-seguinte-modal"
+          class="botoes-modal"
+          aria-label="Imagem seguinte"
+          title="Imagem seguinte"
+        >
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
       </div>
       <!-- Box de informações do visitante -->
       <p id="p-info-visitante"><i id="i-suas-infos">Suas informações:</i></p>

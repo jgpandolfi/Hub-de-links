@@ -387,25 +387,123 @@ const imgModalSrcset = document.getElementById("img-modal-srcset")
 const imgModal = document.getElementById("img-modal")
 const divLegendaParaModal = document.getElementById("legenda-img-modal")
 
+// Função fechar modal pressionando ESC (será invocada logo abaixo)
+const teclasModal = function (event) {
+  // Verifica se o modal está visível para prosseguirmos
+  if (divModal.style.display === "block") {
+    switch (event.key) {
+      case "Escape":
+        btnFecharModal.click() // Simula um clique no botão de fechar
+        break
+      case "ArrowLeft":
+        btnImagemAnterior.style.display === "block" && btnImagemAnterior.click()
+        break
+      case "ArrowRight":
+        btnImagemSeguinte.style.display === "block" && btnImagemSeguinte.click()
+        break
+    }
+  }
+}
+
 // Para cada imagem no grid, adiciona um evento de clique
 imgsParaModal.forEach((img) => {
   img.addEventListener("click", function () {
-    divModal.style.display = "block" // Exibe o modal
+    divModal.style.display = "block" // Exibe o modal (fundo preto que comporta tudo)
     imgModalSrcset.srcset = this.src.replace(".jpg", ".webp") // Seta o srcset da tag <source>
     imgModal.src = this.src // Seta a imagem no modal
     divLegendaParaModal.textContent = this.alt // Seta a descrição no modal
     document.body.classList.add("desativar-scroll") // Bloqueia o scroll do mouse
+    botoesDeControleModal() // Chama a função de controle de botões do modal
+    document.addEventListener("keydown", teclasModal) // Invoca função de fechar modal com ESC
   })
 })
 
 // Identifica e seleciona o botão de fechar (X) do modal
 const btnFecharModal = document.getElementById("btn-fechar-modal")
 
+// Identifica e seleciona os botões de "Imagem anterior" e "Imagem seguinte"
+const btnImagemAnterior = document.getElementById("btn-img-anterior-modal")
+const btnImagemSeguinte = document.getElementById("btn-img-seguinte-modal")
+
 // Quando o botão (X) é clicado, fecha o modal
-btnFecharModal.addEventListener("click", function () {
+btnFecharModal.addEventListener("click", fecharModal)
+
+// Função para fechar o modal (invocada via botão X)
+function fecharModal() {
   divModal.style.display = "none" // Fecha o modal
   document.body.classList.remove("desativar-scroll") // Libera o scroll do fundo
-})
+  document.removeEventListener("keydown", teclasModal) // Desabilita as teclas do modal
+}
+
+// Funções para botões de controle no modal
+function botoesDeControleModal() {
+  // Descobre qual o número da imagem do modal que foi aberta
+  let numImgAbertaModal = parseInt(imgModal.src.match(/img(\d+)\.jpg$/)[1], 10)
+
+  // Checa se existe alguma imagem antes para ser exibida
+  function checarImgAnterior() {
+    if (numImgAbertaModal > 1) {
+      btnImagemAnterior.style.display = "block"
+    } else {
+      btnImagemAnterior.style.display = "none"
+    }
+  }
+
+  // Checa se existe alguma imagem depois para ser exibida
+  function checarImgSeguinte() {
+    if (numImgAbertaModal == imgsParaModal.length) {
+      btnImagemSeguinte.style.display = "none"
+    } else {
+      btnImagemSeguinte.style.display = "block"
+    }
+  }
+
+  // Chama as funções declaradas anteriormente para mostrar/esconder os botões
+  checarImgAnterior()
+  checarImgSeguinte()
+
+  // Adiciona um listener de clique no botão de Imagem Anterior com evento
+  btnImagemAnterior.addEventListener("click", () => {
+    // Altera a imagem exibida no modal
+    imgModalSrcset.srcset =
+      "./assets/imgs-portfolio/img" +
+      (numImgAbertaModal - 1).toString().padStart(2, "0") +
+      ".webp" // Seta o srcset da tag <source>
+    imgModal.src =
+      "./assets/imgs-portfolio/img" +
+      (numImgAbertaModal - 1).toString().padStart(2, "0") +
+      ".jpg" // Seta a imagem no modal
+    // Vai até a NodeList com todas as imagens e localiza o objeto da img anterior
+    const imgAnterior = imgsParaModal[numImgAbertaModal - 2] // Acessa a imagem anterior
+    divLegendaParaModal.textContent = imgAnterior.alt // Seta a descrição no modal
+    // Antes de mais nada, já diminui 1 no número da imagem
+    numImgAbertaModal--
+    // Checa novamente quais botões devem ser atualizados
+    checarImgAnterior()
+    checarImgSeguinte()
+  })
+
+  // Adiciona um listener de clique no botão de Imagem Anterior com evento
+  btnImagemSeguinte.addEventListener("click", () => {
+    // Altera a imagem exibida no modal
+    imgModalSrcset.srcset =
+      "./assets/imgs-portfolio/img" +
+      (numImgAbertaModal + 1).toString().padStart(2, "0") +
+      ".webp" // Seta o srcset da tag <source>
+    imgModal.src =
+      "./assets/imgs-portfolio/img" +
+      (numImgAbertaModal + 1).toString().padStart(2, "0") +
+      ".jpg" // Seta a imagem no modal
+    // Vai até a NodeList com todas as imagens e localiza o objeto da img anterior
+    const imgSeguinte = imgsParaModal[numImgAbertaModal] // Acessa a imagem anterior
+    divLegendaParaModal.textContent = imgSeguinte.alt // Seta a descrição no modal
+    // Antes de mais nada, já aumenta 1 no número da imagem atual
+    numImgAbertaModal++
+    // Checa novamente quais botões devem ser atualizados
+    checarImgAnterior()
+    checarImgSeguinte()
+  })
+}
 
 // =============
 // Política de privacidade

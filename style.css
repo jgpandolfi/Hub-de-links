@@ -109,6 +109,8 @@ body * {
   background-color: #ff0080; /* Cor da barra de progresso */
   transition: width 0.4s ease-in-out; /* Animação suave da barra */
   border-radius: 10px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 #barra-carregamento::after {
@@ -133,11 +135,13 @@ body * {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 #popup-conteudo {
@@ -467,7 +471,9 @@ footer {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro com transparência */
+  background-color: rgba(0, 0, 0, 0.8); /* Fundo escuro com transparência */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 #img-modal {
@@ -490,21 +496,41 @@ footer {
 
 #btn-fechar-modal {
   position: absolute;
-  top: 10px;
+  top: 20px;
   right: 25px;
+}
+
+.botoes-modal {
   color: white;
   font-size: 35px;
   font-weight: bold;
   cursor: pointer;
+  background: none; /* Remove o fundo padrão do botão */
+  border: none; /* Remove a borda padrão do botão */
+  padding: 0; /* Remove o espaçamento interno padrão */
 }
 
 #img-modal,
-#btn-fechar-modal {
+#legenda-img-modal,
+.botoes-modal {
   animation-name: zoom;
   animation-duration: 0.6s;
 }
 
-#btn-fechar-modal:hover {
-  transform: scale(1.1);
+.botoes-modal:hover {
   opacity: 0.9;
+}
+
+#btn-img-anterior-modal {
+  position: absolute;
+  left: 5%; /* Ajusta a posição para ficar próximo ao lado esquerdo da imagem */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#btn-img-seguinte-modal {
+  position: absolute;
+  right: 5%; /* Ajusta a posição para ficar próximo ao lado direito da imagem */
+  top: 50%;
+  transform: translateY(-50%);
 }

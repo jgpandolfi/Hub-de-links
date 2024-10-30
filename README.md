@@ -64,6 +64,7 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Avisos legais sobre dados:</b> pop-up com dizeres compatíveis com a LGPD e páginas de política de privacidade</li>
 <li><b>Ajuste automático de idioma:</b> falantes de português seriam ajustados automaticamente para esse idioma, os demais para o inglês</li>
 <li><b>Barra de carregamento:</b> ao trocar o status da SPA, utilizar barra de carregamento para indicar o status do sistema (heurística de Nielsen)</li>
+<li><b>Botões (e teclas) de navegação no modal do portfólio de design:</b> troque facilmente entre as imagens com o modal aberto
 </ul>
 
 <p>🟡 Em desenvolvimento:</p>
