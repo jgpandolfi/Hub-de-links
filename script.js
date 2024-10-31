@@ -389,6 +389,7 @@ const divLegendaParaModal = document.getElementById("legenda-img-modal")
 
 // Função fechar modal pressionando ESC (será invocada logo abaixo)
 const teclasModal = function (event) {
+  console.log("Executou a função de teclas")
   // Verifica se o modal está visível para prosseguirmos
   if (divModal.style.display === "block") {
     switch (event.key) {
@@ -414,7 +415,9 @@ imgsParaModal.forEach((img) => {
     divLegendaParaModal.textContent = this.alt // Seta a descrição no modal
     document.body.classList.add("desativar-scroll") // Bloqueia o scroll do mouse
     botoesDeControleModal() // Chama a função de controle de botões do modal
-    document.addEventListener("keydown", teclasModal) // Invoca função de fechar modal com ESC
+    document.addEventListener("keydown", teclasModal) // Adiciona um listener para as teclas
+    divModal.addEventListener("touchstart", iniciarToque) // Toque começa, chama a função iniciarToque
+    divModal.addEventListener("touchend", finalizarToque) // Toque termina, chama a função finalizarToque
   })
 })
 
@@ -436,11 +439,13 @@ divModal.addEventListener("click", (event) => {
   }
 })
 
-// Função para fechar o modal (invocada via botão X)
+// Função para fechar o modal (invocada via botão X ou clique no fundo do modal)
 function fecharModal() {
   divModal.style.display = "none" // Fecha o modal
   document.body.classList.remove("desativar-scroll") // Libera o scroll do fundo
   document.removeEventListener("keydown", teclasModal) // Desabilita as teclas do modal
+  divModal.removeEventListener("touchstart", iniciarToque) // Desabilita monitorar o toque
+  divModal.removeEventListener("touchend", finalizarToque) // Desabilita monitorar o toque
 }
 
 // Funções para botões de controle no modal
@@ -511,6 +516,51 @@ function botoesDeControleModal() {
     checarImgAnterior()
     checarImgSeguinte()
   })
+}
+
+// Arrasto de touch para trocar imagens do modal
+// Variáveis para armazenar as coordenadas de início e fim do toque
+let toqueInicialX = 0 // Armazena a coordenada X do ponto onde o toque começa
+let toqueFinalX = 0 // Armazena a coordenada X do ponto onde o toque termina
+
+// Função para iniciar o evento de toque
+function iniciarToque(event) {
+  // Captura a coordenada X do toque inicial
+  toqueInicialX = event.touches[0].clientX
+  // 'event.touches' contém informações sobre todos os toques na tela.
+  // '[0]' acessa o primeiro toque, e 'clientX' fornece a posição horizontal desse toque.
+}
+
+// Função para finalizar o evento de toque
+function finalizarToque(event) {
+  // Captura a coordenada X do toque final
+  toqueFinalX = event.changedTouches[0].clientX
+  // 'event.changedTouches' contém informações sobre os toques que mudaram.
+  // '[0]' acessa o primeiro toque que foi movido, e 'clientX' fornece a posição horizontal desse toque.
+
+  // Chama a função para verificar a direção do arrasto
+  verificarDirecaoArrasto()
+}
+
+// Função para verificar a direção do arrasto
+function verificarDirecaoArrasto() {
+  // Calcula a diferença entre a posição final e inicial do toque
+  const diferencaX = toqueFinalX - toqueInicialX
+
+  // Define um limite mínimo para o arrasto ser considerado
+  if (Math.abs(diferencaX) > 50) {
+    // 'Math.abs(diferencaX)' calcula o valor absoluto da diferença,
+    // garantindo que verificamos o tamanho do movimento independentemente da direção.
+
+    // Se a diferença for negativa (arrasto para a esquerda) e o botão "imagem seguinte" está visível
+    if (diferencaX < 0 && btnImagemSeguinte.style.display !== "none") {
+      btnImagemSeguinte.click() // Simula um clique no botão "imagem seguinte"
+    }
+    // Se a diferença for positiva (arrasto para a direita) e o botão "imagem anterior" está visível
+    else if (diferencaX > 0 && btnImagemAnterior.style.display !== "none") {
+      btnImagemAnterior.click() // Simula um clique no botão "imagem anterior"
+    }
+  }
 }
 
 // =============
