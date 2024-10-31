@@ -408,7 +408,7 @@ const teclasModal = function (event) {
 // Para cada imagem no grid, adiciona um evento de clique
 imgsParaModal.forEach((img) => {
   img.addEventListener("click", function () {
-    divModal.style.display = "block" // Exibe o modal (fundo preto que comporta tudo)
+    divModal.style.display = "flex" // Exibe o modal (fundo preto que comporta tudo)
     imgModalSrcset.srcset = this.src.replace(".jpg", ".webp") // Seta o srcset da tag <source>
     imgModal.src = this.src // Seta a imagem no modal
     divLegendaParaModal.textContent = this.alt // Seta a descrição no modal

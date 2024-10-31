@@ -465,6 +465,9 @@ footer {
 /* Estilos do modal (janela flutuante) para exibir imagem do portfólio ampliada */
 #modal {
   display: none;
+  align-items: center; /* Alinha verticalmente */
+  justify-content: center; /* Alinha horizontalmente */
+  flex-direction: column; /* Coloca os elementos em uma coluna */
   position: fixed;
   z-index: 999;
   left: 0;
@@ -478,20 +481,20 @@ footer {
 
 #img-modal {
   margin: auto;
-  margin-top: 100px;
   display: block;
   width: 80%;
-  max-width: 700px;
-  max-height: 70vh;
+  max-width: 800px;
+  max-height: 84vh;
+  min-height: 300px;
   object-fit: contain;
 }
 
 #legenda-img-modal {
-  margin: auto;
+  margin-top: 24px;
   display: block;
   text-align: center;
   color: #ccc;
-  padding: 10px 0;
+  font-weight: 600;
 }
 
 #btn-fechar-modal {
@@ -521,16 +524,17 @@ footer {
   opacity: 0.9;
 }
 
-#btn-img-anterior-modal {
+#btn-img-anterior-modal,
+#btn-img-seguinte-modal {
   position: absolute;
-  left: 5%; /* Ajusta a posição para ficar próximo ao lado esquerdo da imagem */
   top: 50%;
   transform: translateY(-50%);
 }
 
+#btn-img-anterior-modal {
+  left: 5%;
+}
+
 #btn-img-seguinte-modal {
-  position: absolute;
-  right: 5%; /* Ajusta a posição para ficar próximo ao lado direito da imagem */
-  top: 50%;
-  transform: translateY(-50%);
+  right: 5%;
 }
