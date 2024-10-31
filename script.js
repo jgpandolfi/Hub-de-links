@@ -428,6 +428,14 @@ const btnImagemSeguinte = document.getElementById("btn-img-seguinte-modal")
 // Quando o botão (X) é clicado, fecha o modal
 btnFecharModal.addEventListener("click", fecharModal)
 
+// Quando o modal for clicado, o modal também deve ser fechado
+divModal.addEventListener("click", (event) => {
+  // Verifica se o alvo do clique é o próprio modal e não um de seus elementos internos (filhos)
+  if (event.target === divModal) {
+    fecharModal()
+  }
+})
+
 // Função para fechar o modal (invocada via botão X)
 function fecharModal() {
   divModal.style.display = "none" // Fecha o modal
