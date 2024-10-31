@@ -525,27 +525,28 @@ let toqueFinalX = 0 // Armazena a coordenada X do ponto onde o toque termina
 
 // Função para iniciar o evento de toque
 function iniciarToque(event) {
-  // Captura a coordenada X do toque inicial
-  toqueInicialX = event.touches[0].clientX
-  // 'event.touches' contém informações sobre todos os toques na tela.
-  // '[0]' acessa o primeiro toque, e 'clientX' fornece a posição horizontal desse toque.
+  toqueInicialX = event.touches[0].clientX // Captura a coordenada X do toque inicial
+  imgModal.classList.add("efeitos-arrasto-img-modal") // Adiciona a classe para animações
 }
 
 // Função para finalizar o evento de toque
 function finalizarToque(event) {
-  // Captura a coordenada X do toque final
-  toqueFinalX = event.changedTouches[0].clientX
-  // 'event.changedTouches' contém informações sobre os toques que mudaram.
-  // '[0]' acessa o primeiro toque que foi movido, e 'clientX' fornece a posição horizontal desse toque.
+  toqueFinalX = event.changedTouches[0].clientX // Captura a coordenada X do toque final
 
   // Chama a função para verificar a direção do arrasto
   verificarDirecaoArrasto()
+
+  // Restaura o visual da imagem para o normal
+  imgModal.style.opacity = "1" // Restaura a opacidade da imagem
+  imgModal.style.transform = "translateX(0)" // Restaura a posição da imagem
+
+  // Remove a classe de transição para a próxima interação
+  imgModal.classList.remove("efeitos-arrasto-img-modal")
 }
 
 // Função para verificar a direção do arrasto
 function verificarDirecaoArrasto() {
-  // Calcula a diferença entre a posição final e inicial do toque
-  const diferencaX = toqueFinalX - toqueInicialX
+  const diferencaX = toqueFinalX - toqueInicialX // Diferença entre a posição final e inicial do toque
 
   // Define um limite mínimo para o arrasto ser considerado
   if (Math.abs(diferencaX) > 50) {
@@ -554,10 +555,14 @@ function verificarDirecaoArrasto() {
 
     // Se a diferença for negativa (arrasto para a esquerda) e o botão "imagem seguinte" está visível
     if (diferencaX < 0 && btnImagemSeguinte.style.display !== "none") {
+      imgModal.style.opacity = "0.5" // Diminui a opacidade durante o arrasto
+      imgModal.style.transform = "translateX(-100%)" // Move a imagem para a esquerda
       btnImagemSeguinte.click() // Simula um clique no botão "imagem seguinte"
     }
     // Se a diferença for positiva (arrasto para a direita) e o botão "imagem anterior" está visível
     else if (diferencaX > 0 && btnImagemAnterior.style.display !== "none") {
+      imgModal.style.opacity = "0.5" // Diminui a opacidade durante o arrasto
+      imgModal.style.transform = "translateX(100%)" // Move a imagem para a direita
       btnImagemAnterior.click() // Simula um clique no botão "imagem anterior"
     }
   }
