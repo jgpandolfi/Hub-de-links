@@ -29,10 +29,24 @@ if (isDesktop()) {
 }
 
 // ======================
-// Alternar modo escuro/claro
-function toggleMode() {
+// Recurso para alternar entre os modos escuro/claro
+// Seleciona e armazena o botão switch em uma variável
+const btnSwitch = document.getElementById("switch")
+
+// Adiciona um listener ao botão de switch
+btnSwitch.addEventListener("click", alterarTema)
+
+// Função para alternar o tema e salvar a preferência no Local Storage
+function alterarTema() {
   const html = document.documentElement
   html.classList.toggle("light")
+
+  // Salvar a configuração no Local Storage
+  if (html.classList.contains("light")) {
+    localStorage.setItem("tema", "light")
+  } else {
+    localStorage.setItem("tema", "dark")
+  }
 }
 
 // ======================
@@ -288,6 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
   obterISP()
   obterLoc()
   autoAjusteIdioma()
+  carregarLocalStorage()
 })
 
 // ============
@@ -628,6 +643,18 @@ function aceitar() {
 function recusar() {
   // Redireciona o usuário para fora do site
   window.location.href = "https://www.google.com"
+}
+
+// =============
+// Local Storage
+// Carregar as preferências salvas no local storage
+function carregarLocalStorage() {
+  const temaSalvo = localStorage.getItem("tema")
+  if (temaSalvo === "light") {
+    document.documentElement.classList.add("light")
+  } else {
+    document.documentElement.classList.remove("light")
+  }
 }
 
 // Desenvolvido por Jota / José Guilherme Pandolfi

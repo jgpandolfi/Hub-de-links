@@ -66,6 +66,7 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Barra de carregamento:</b> ao trocar o status da SPA, utilizar barra de carregamento para indicar o status do sistema (heurística de Nielsen)</li>
 <li><b>Botões (e teclas) de navegação no modal do portfólio de design:</b> troque facilmente entre as imagens com o modal aberto
 <li><b>Barra de pesquisa no portfólio de imagens:</b> para facilitar a busca por imagens relacionadas a segmentos específicos</li>
+<li><b>Preferências de usuário salvas no Local Storage:</b> o tema de preferência do usuário é salvo no local storage, para maior comodidade</li>
 </ul>
 
 <p>🟡 Em desenvolvimento:</p>
