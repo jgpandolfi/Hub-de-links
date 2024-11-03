@@ -65,16 +65,16 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Ajuste automático de idioma:</b> falantes de português seriam ajustados automaticamente para esse idioma, os demais para o inglês</li>
 <li><b>Barra de carregamento:</b> ao trocar o status da SPA, utilizar barra de carregamento para indicar o status do sistema (heurística de Nielsen)</li>
 <li><b>Botões (e teclas) de navegação no modal do portfólio de design:</b> troque facilmente entre as imagens com o modal aberto
+<li><b>Barra de pesquisa no portfólio de imagens:</b> para facilitar a busca por imagens relacionadas a segmentos específicos</li>
 </ul>
 
 <p>🟡 Em desenvolvimento:</p>
 <ul>
-<li><b>Barra de pesquisa no portfólio de imagens:</b> para facilitar a busca por imagens relacionadas a segmentos específicos</li>
+<li><b>Banco de dados próprios para insights:</b> armazenamento de número de cliques em cada botão</li>
 </ul>
 
 <p>🔴 Não iniciado:</p>
 <ul>
-<li><b>Banco de dados próprios para insights:</b> armazenamento de número de cliques em cada botão</li>
 <li><b>Facebook Pixel:</b> para eventuais campanhas de anúncios pagos</li>
 <li><b>Google Analytics:</b> para melhor acompanhamento da experiência do usuário</li>
 <li><b>Botão e página (em SPA) de projetos:</b> para que o usuário possa conhecer outros projetos de desenvolvimento web que estou empenhado</li>

@@ -377,6 +377,46 @@ function acompanharCarregamentoImgs() {
 }
 
 // =============
+// Busca (filtro) por imagens específicas no portfólio
+
+// Selecionando e salvando variáveis dos elementos que iremos utilizar
+const barraDeBuscaPortfolio = document.getElementById(
+  "barra-de-busca-portfolio"
+)
+
+// Função para exibir apenas imagens que sejam relacionadas ao input do usuário
+function buscarImagensPortfolio() {
+  // Puxa o que estiver escrito na barra e armazena como variável
+  const termosBuscados = barraDeBuscaPortfolio.value.trim().toLowerCase()
+  // Seleciona todas as divs de itens do portfólio
+  const itensDoPortfolio = document.querySelectorAll(
+    "#grid-portfolio .item-portfolio"
+  )
+  // Tomar cuidado ^ a variável acima não seleciona as imagens do portfólio, mas sim as divs container de cada uma das imagens
+
+  // Checa se o campo de busca não está em branco (evitar bugs futuramente)
+  if (termosBuscados.length === 0) {
+    // Se o campo de busca estiver vazio => exibir todos os itens
+    itensDoPortfolio.forEach((item) => {
+      item.style.display = "block"
+    })
+  } else {
+    itensDoPortfolio.forEach((item) => {
+      const textoDoAlt = item.querySelector("img").alt.trim().toLowerCase()
+
+      if (textoDoAlt.includes(termosBuscados)) {
+        item.style.display = "block"
+      } else {
+        item.style.display = "none"
+      }
+    })
+  }
+}
+
+// Acrecenta um listener na barra de busca com evento key up
+barraDeBuscaPortfolio.addEventListener("keyup", buscarImagensPortfolio)
+
+// =============
 // Modal (janela flutuante) para exibir imagem do portfólio ampliada
 // Identifica e seleciona a div do modal
 const divModal = document.getElementById("modal")
@@ -536,6 +576,7 @@ function finalizarToque(event) {
   // Chama a função para verificar a direção do arrasto
   verificarDirecaoArrasto()
 
+  console.log("Passou da verificação de direção do arrasto")
   // Restaura o visual da imagem para o normal
   imgModal.style.opacity = "1" // Restaura a opacidade da imagem
   imgModal.style.transform = "translateX(0)" // Restaura a posição da imagem

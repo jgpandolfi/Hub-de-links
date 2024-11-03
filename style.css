@@ -431,6 +431,17 @@ footer {
   font-size: 16px;
 }
 
+#container-barra-de-busca-portfolio {
+  margin: 20px 0;
+}
+
+#barra-de-busca-portfolio {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
 #grid-portfolio {
   margin-top: 12px;
   display: grid;
