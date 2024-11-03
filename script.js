@@ -638,10 +638,12 @@ btnRecusar.addEventListener("click", recusar)
 function aceitar() {
   // Remove o pop-up da página e permite a navegação normal
   document.getElementById("popup-container").style.display = "none"
+  localStorage.setItem("politicaDePrivacidade", "aceita") // Salvar no Local Storage
 }
 
 function recusar() {
   // Redireciona o usuário para fora do site
+  localStorage.setItem("politicaDePrivacidade", "aceita") // Salvar no Local Storage
   window.location.href = "https://www.google.com"
 }
 
@@ -649,6 +651,12 @@ function recusar() {
 // Local Storage
 // Carregar as preferências salvas no local storage
 function carregarLocalStorage() {
+  // Política de Privacidade já foi aceita?
+  const politicaDePrivacidade = localStorage.getItem("politicaDePrivacidade")
+  if (politicaDePrivacidade === "aceita") {
+    document.getElementById("popup-container").style.display = "none"
+  }
+  // Tema salvo
   const temaSalvo = localStorage.getItem("tema")
   if (temaSalvo === "light") {
     document.documentElement.classList.add("light")
