@@ -391,7 +391,7 @@ const divLegendaParaModal = document.getElementById("legenda-img-modal")
 const teclasModal = function (event) {
   console.log("Executou a função de teclas")
   // Verifica se o modal está visível para prosseguirmos
-  if (divModal.style.display === "block") {
+  if (divModal.style.display !== "none") {
     switch (event.key) {
       case "Escape":
         btnFecharModal.click() // Simula um clique no botão de fechar
