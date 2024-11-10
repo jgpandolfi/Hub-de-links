@@ -665,4 +665,23 @@ function carregarLocalStorage() {
   }
 }
 
+// =============
+// BACKEND
+// Envio de estatísticas para o banco de dados
+// Inicia a variável de contagens de cliques
+let totalCliques = 0
+let cliquesEmLinks = 0
+
+// Conta cliques em qualquer lugar na página
+document.body.addEventListener("click", function (event) {
+  totalCliques++
+
+  // Verifica se o clique foi em um link (<a>)
+  if (event.target.tagName === "A") {
+    cliquesEmLinks++
+  }
+
+  // Envia os dados ao backend
+  // ===== FAZER =======
+
 // Desenvolvido por Jota / José Guilherme Pandolfi
