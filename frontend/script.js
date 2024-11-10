@@ -680,8 +680,8 @@ document.body.addEventListener("click", function (event) {
   if (event.target.tagName === "A") {
     cliquesEmLinks++
   }
-
-  // Envia os dados ao backend
-  // ===== FAZER =======
+})
+// Envia os dados ao backend
+// ===== FAZER =======
 
 // Desenvolvido por Jota / José Guilherme Pandolfi
