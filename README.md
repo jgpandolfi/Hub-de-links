@@ -22,15 +22,18 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <p>Esse projeto foi desenvolvido com o uso das seguintes tecnologias:</p>
 
 <ul>
+<li>Figma</li>
 <li>HTML</li>
 <li>CSS</li>
 <li>JavaScript</li>
-<li>Figma</li>
+<li>Node.JS</li>
+<li>Express.JS</li>
+<li>PostgreeSQL</li>
 <li>Git e Github</li>
 </ul>
 
 <p>No âmbito das tecnologias anteriores, foram utilizados os seguintes recursos e práticas:</p>
-
+<p>Front-end:</p>
 <ul>
 <li>Media queries</li>
 <li>Animações e efeitos em CSS</li>
@@ -50,6 +53,24 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li>catch() e fetch() para tratamento de erros</li>
 </ul>
 
+<p>Back-end:</p>
+<ul>
+<li>dotenv: Para variáveis de ambiente</li>
+<li>cors: Para gerenciamento de CORS</li>
+<li>Express.js como framework web</li>
+<li>PostgreeSQL como banco de dados</li>
+<li>Arquitetura REST</li>
+<li>Middlewares para processamento de requisições</li>
+<li>Pool de conexões para banco de dados</li>
+<li>Tratamento robusto de erros</li>
+<li>Logs detalhados de console</li>
+<li>Verificação e criação automática de tabelas no banco de dados</li>
+<li>Health check de conexões da aplicação</li>
+<li>Sanitização de dados</li>
+<li>Validação de entradas</li>
+<li>Código modular e organizado</li>
+</ul>
+
 ## 💻 Recursos e funcionalidades
 
 <p>🟢 Já implementado:</p>
@@ -67,17 +88,18 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Botões (e teclas) de navegação no modal do portfólio de design:</b> troque facilmente entre as imagens com o modal aberto
 <li><b>Barra de pesquisa no portfólio de imagens:</b> para facilitar a busca por imagens relacionadas a segmentos específicos</li>
 <li><b>Preferências de usuário salvas no Local Storage:</b> o tema de preferência do usuário é salvo no local storage, para maior comodidade</li>
+<li><b>Banco de dados próprios para insights:</b> armazenamento de número de cliques em cada botão</li>
+<li><b>Programa para geração de relatórios de insghts:</b> programa em Node.JS separado do servidor para geração de relatórios em .txt dos insights do banco de dados próprio sobre os visitantes</li>
 </ul>
 
 <p>🟡 Em desenvolvimento:</p>
 <ul>
-<li><b>Banco de dados próprios para insights:</b> armazenamento de número de cliques em cada botão</li>
 </ul>
 
 <p>🔴 Não iniciado:</p>
 <ul>
 <li><b>Facebook Pixel:</b> para eventuais campanhas de anúncios pagos</li>
-<li><b>Google Analytics:</b> para melhor acompanhamento da experiência do usuário</li>
+<li><b>Google Tag Manager e Google Analytics:</b> para melhor acompanhamento da experiência do usuário</li>
 <li><b>Botão e página (em SPA) de projetos:</b> para que o usuário possa conhecer outros projetos de desenvolvimento web que estou empenhado</li>
 </ul>
 
