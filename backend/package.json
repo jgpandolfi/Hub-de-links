@@ -1,20 +1,37 @@
 {
-  "name": "hub_de_links",
+  "name": "hub-de-links-backend",
   "version": "1.0.0",
-  "description": "API do Hub de Links para conectar ao banco de dados PostgreSQL",
+  "description": "Backend para manipulação de dados de visitantes do Hub de Links",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "npm install"
   },
-  "author": "Jota / José Guilherme Pandolfi",
-  "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "geoip-lite": "^1.4.10",
-    "pg": "^8.10.0",
+    "geoip-lite": "^1.4.9",
+    "pg": "^8.11.3",
     "request-ip": "^3.3.0",
-    "useragent": "^2.3.0",
-    "utm-params": "^1.1.0"
-  }
+    "useragent": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "backend",
+    "nodejs",
+    "express",
+    "postgresql",
+    "analytics",
+    "hub-de-links",
+    "m2a"
+  ],
+  "author": "Jota / José Guilherme Pandolfi",
+  "license": "MIT"
 }
