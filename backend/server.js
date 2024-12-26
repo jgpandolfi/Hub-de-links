@@ -51,6 +51,7 @@ const criarTabelaVisitantes = `
     pais VARCHAR(100),
     sistema_operacional VARCHAR(100),
     navegador VARCHAR(200),
+    utm_source VARCHAR(100) DEFAULT 'acesso-direto',
     total_cliques INTEGER DEFAULT 0,
     cliques_validos INTEGER DEFAULT 0,
     tempo_permanencia INTEGER DEFAULT 0,
@@ -134,6 +135,7 @@ app.post("/registrar-visitante", async (req, res) => {
       pais: geolocalizacao?.country || "Desconhecido",
       sistema_operacional: userAgent.os.toString(),
       navegador: userAgent.toAgent(),
+      utm_source: req.body.utm_source || "acesso-direto",
       total_cliques: 0,
       cliques_validos: 0,
       tempo_permanencia: 0,
@@ -143,8 +145,8 @@ app.post("/registrar-visitante", async (req, res) => {
       INSERT INTO visitantes (
         visitor_id, timestamp_inicio, data_acesso_br, hora_acesso_br,
         endereco_ip, cidade, estado, pais, sistema_operacional,
-        navegador, total_cliques, cliques_validos, tempo_permanencia
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        navegador, utm_source, total_cliques, cliques_validos, tempo_permanencia
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING id, visitor_id`
 
     const resultado = await pool.query(query, [
@@ -158,6 +160,7 @@ app.post("/registrar-visitante", async (req, res) => {
       dadosVisitante.pais,
       dadosVisitante.sistema_operacional,
       dadosVisitante.navegador,
+      dadosVisitante.utm_source,
       dadosVisitante.total_cliques,
       dadosVisitante.cliques_validos,
       dadosVisitante.tempo_permanencia,
@@ -182,20 +185,23 @@ app.post("/registrar-visitante", async (req, res) => {
 app.put("/atualizar-visitante/:visitor_id", async (req, res) => {
   try {
     const { visitor_id } = req.params
-    const { total_cliques, cliques_validos, tempo_permanencia } = req.body
+    const { total_cliques, cliques_validos, tempo_permanencia, utm_source } =
+      req.body
 
     const query = `
       UPDATE visitantes 
       SET total_cliques = $1, 
           cliques_validos = $2, 
-          tempo_permanencia = $3
-      WHERE visitor_id = $4
+          tempo_permanencia = $3,
+          utm_source = COALESCE($4, utm_source)
+      WHERE visitor_id = $5
       RETURNING *`
 
     const resultado = await pool.query(query, [
       total_cliques,
       cliques_validos,
       tempo_permanencia,
+      utm_source,
       visitor_id,
     ])
 

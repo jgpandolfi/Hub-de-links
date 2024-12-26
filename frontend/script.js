@@ -668,20 +668,134 @@ function carregarLocalStorage() {
 // =============
 // BACKEND
 // Envio de estatísticas para o banco de dados
-// Inicia a variável de contagens de cliques
-let totalCliques = 0
-let cliquesEmLinks = 0
 
-// Conta cliques em qualquer lugar na página
-document.body.addEventListener("click", function (event) {
-  totalCliques++
-
-  // Verifica se o clique foi em um link (<a>)
-  if (event.target.tagName === "A") {
-    cliquesEmLinks++
+class VisitanteMonitor {
+  constructor() {
+    this.visitorId = `v_${Date.now()}_${Math.random()
+      .toString(36)
+      .substr(2, 9)}`
+    this.timestampInicio = new Date()
+    this.totalCliques = 0
+    this.cliquesValidos = 0
+    this.tempoInicio = Date.now()
+    this.utmSource = this.obterUTMSource()
   }
+
+  // Função para obter UTM Source
+  obterUTMSource() {
+    const urlParams = new URLSearchParams(window.location.search)
+    return urlParams.get("utm_source") || "acesso-direto"
+  }
+
+  // Inicializar monitoramento
+  iniciar() {
+    this.monitorarCliques()
+    this.monitorarTempoPermanencia()
+    this.registrarVisitante()
+  }
+
+  // Monitorar cliques na página
+  monitorarCliques() {
+    document.addEventListener("click", (event) => {
+      this.totalCliques++
+
+      const elementosClicaveis = ["A", "BUTTON", "INPUT", "SELECT"]
+      if (elementosClicaveis.includes(event.target.tagName)) {
+        this.cliquesValidos++
+      }
+
+      this.atualizarDados()
+    })
+  }
+
+  // Calcular tempo de permanência
+  monitorarTempoPermanencia() {
+    window.addEventListener("beforeunload", () => {
+      const tempoPermanencia = Math.floor(
+        (Date.now() - this.tempoInicio) / 1000
+      )
+      this.atualizarDados(tempoPermanencia)
+    })
+  }
+
+  // Registrar novo visitante
+  async registrarVisitante() {
+    try {
+      const response = await fetch(
+        "https://hub-de-links.onrender.com/registrar-visitante",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            visitor_id: this.visitorId,
+            timestamp_inicio: this.timestampInicio,
+            data_acesso_br: this.timestampInicio.toLocaleDateString("pt-BR"),
+            hora_acesso_br: this.timestampInicio.toLocaleTimeString("pt-BR"),
+            sistema_operacional: platform.os.family,
+            navegador: this.obterBrowser(),
+            utm_source: this.utmSource,
+            total_cliques: 0,
+            cliques_validos: 0,
+            tempo_permanencia: 0,
+          }),
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error("Erro ao registrar visitante")
+      }
+    } catch (erro) {
+      console.error("Erro:", erro)
+    }
+  }
+
+  // Atualizar dados do visitante
+  async atualizarDados(tempoPermanencia = 0) {
+    try {
+      await fetch(
+        `https://hub-de-links.onrender.com/atualizar-visitante/${this.visitorId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            total_cliques: this.totalCliques,
+            cliques_validos: this.cliquesValidos,
+            tempo_permanencia: tempoPermanencia,
+            utm_source: this.utmSource,
+          }),
+        }
+      )
+    } catch (erro) {
+      console.error("Erro ao atualizar dados:", erro)
+    }
+  }
+
+  // Obter informações do navegador
+  obterBrowser() {
+    const userAgent = navigator.userAgent
+    const browsers = {
+      chrome: /chrome/i,
+      safari: /safari/i,
+      firefox: /firefox/i,
+      edge: /edge/i,
+      opera: /opera/i,
+    }
+
+    for (const [browser, regex] of Object.entries(browsers)) {
+      if (regex.test(userAgent)) return browser
+    }
+    return "outro"
+  }
+}
+
+// Iniciar monitoramento quando a página carregar
+document.addEventListener("DOMContentLoaded", () => {
+  const monitor = new VisitanteMonitor()
+  monitor.iniciar()
 })
-// Envia os dados ao backend
-// ===== FAZER =======
 
 // Desenvolvido por Jota / José Guilherme Pandolfi
