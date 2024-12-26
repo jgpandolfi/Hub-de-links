@@ -6,6 +6,7 @@ const geoip = require("geoip-lite")
 const useragent = require("useragent")
 require("dotenv").config()
 const cors = require("cors")
+const axios = require("axios")
 
 // Instância do Express
 const app = express()
@@ -166,6 +167,9 @@ app.post("/registrar-visitante", async (req, res) => {
       dadosVisitante.tempo_permanencia,
     ])
 
+    // Chamar função para enviar mensagem no Discord
+    await enviarNotificacaoDiscord(dadosVisitante)
+
     console.log("✅ Novo visitante registrado:", resultado.rows[0].visitor_id)
     res.status(201).json({
       mensagem: "Visitante registrado com sucesso",
@@ -243,3 +247,48 @@ inicializarBancoDeDados()
 process.on("unhandledRejection", (erro) => {
   console.error("❌ Erro não tratado:", erro)
 })
+
+// Webhook Discord
+// Declara a variável de ambiente que armazena a Webhook do Discord
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
+
+// Função para enviar notificação ao Discord
+async function enviarNotificacaoDiscord(dadosVisitante) {
+  try {
+    const mensagem = {
+      embeds: [
+        {
+          title: "🌟 Novo Visitante Detectado!",
+          color: 3447003, // Azul Discord
+          fields: [
+            {
+              name: "📅 Data e Hora",
+              value: `${dadosVisitante.data_acesso_br} às ${dadosVisitante.hora_acesso_br}`,
+            },
+            {
+              name: "📍 Localização",
+              value: `${dadosVisitante.cidade}, ${dadosVisitante.estado}, ${dadosVisitante.pais}`,
+            },
+            {
+              name: "💻 Dispositivo",
+              value: `${dadosVisitante.sistema_operacional}\n${dadosVisitante.navegador}`,
+            },
+            {
+              name: "🔍 Origem",
+              value: dadosVisitante.utm_source || "Acesso Direto",
+            },
+          ],
+          footer: {
+            text: `ID: ${dadosVisitante.visitor_id}`,
+          },
+          timestamp: new Date().toISOString(),
+        },
+      ],
+    }
+
+    await axios.post(DISCORD_WEBHOOK_URL, mensagem)
+    console.log("✅ Notificação enviada ao Discord!")
+  } catch (erro) {
+    console.error("❌ Erro ao enviar notificação ao Discord:", erro.message)
+  }
+}
