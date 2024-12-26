@@ -37,20 +37,6 @@ pool
     console.error("❌ Erro ao conectar com banco de dados:", erro.message)
   })
 
-// Adicione esta query junto com as outras queries de inicialização
-const adicionarColunaUTM = `
-  DO $$ 
-  BEGIN 
-    IF NOT EXISTS (
-      SELECT 1 
-      FROM information_schema.columns 
-      WHERE table_name='visitantes' AND column_name='utm_source'
-    ) THEN 
-      ALTER TABLE visitantes ADD COLUMN utm_source VARCHAR(100) DEFAULT 'acesso-direto';
-    END IF;
-  END $$;
-`
-
 // Query para criar tabela de visitantes
 const criarTabelaVisitantes = `
   CREATE TABLE IF NOT EXISTS visitantes (
@@ -92,7 +78,6 @@ async function inicializarBancoDeDados() {
     console.log("⏳ Verificando/criando tabelas no banco de dados...")
     await pool.query(criarTabelaVisitantes)
     await pool.query(criarTabelaSessoes)
-    await pool.query(adicionarColunaUTM)
     console.log("✅ Tabelas verificadas/criadas com sucesso!")
   } catch (erro) {
     console.error("❌ Erro ao criar tabelas:", erro.message)
