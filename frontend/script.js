@@ -763,10 +763,9 @@ class VisitanteMonitor {
 
   monitorarTempoPermanencia() {
     window.addEventListener("beforeunload", () => {
-      const tempoPermanencia = Math.floor(
-        (Date.now() - this.tempoInicio) / 1000
-      )
-      this.atualizarDados(tempoPermanencia)
+      const segundosTotal = Math.floor((Date.now() - this.tempoInicio) / 1000)
+      const tempoFormatado = this.formatarTempoPermanencia(segundosTotal)
+      this.atualizarDados(tempoFormatado)
     })
   }
 
@@ -806,12 +805,12 @@ class VisitanteMonitor {
     }
   }
 
-  async atualizarDados(tempoPermanencia = 0) {
+  async atualizarDados(tempoPermanencia = "00 min 00 s") {
     try {
       const dadosAtualizacao = {
         total_cliques: Math.max(0, this.totalCliques),
         cliques_validos: Math.max(0, this.cliquesValidos),
-        tempo_permanencia: this.formatarTempoPermanencia(tempoPermanencia),
+        tempo_permanencia: tempoPermanencia,
         utm_source: this.sanitizarTexto(this.utmSource),
       }
 
