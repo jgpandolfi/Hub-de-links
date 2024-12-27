@@ -65,7 +65,11 @@ function obterIP() {
 
 // Função para obter o SO do usuário
 function obterSO() {
-  document.getElementById("SO").textContent = platform.os.family
+  const sistemaOperacional = navigator.userAgentData
+    ? navigator.userAgentData.platform
+    : platform.os.family
+  document.getElementById("SO").textContent = sistemaOperacional
+  return sistemaOperacional
 }
 
 // Função para obter o browser do usuário
@@ -104,7 +108,15 @@ function obterBrowser() {
     default:
       browser = "Desconhecido"
   }
-  document.getElementById("browser").innerText = browser
+
+  // Sanitizar o valor antes de exibir e de retornar
+  const browserSanitizado = browser.replace(/[<>]/g, "").substring(0, 200)
+
+  // Atualizar exibição no box de informações do visitante
+  document.getElementById("browser").innerText = browserSanitizado
+
+  // Retorna o browser sanitizado para enviar ao backend
+  return browserSanitizado
 }
 
 // Obter ISP do usuário
@@ -133,22 +145,36 @@ function obterLoc() {
 
 // Obter a origem do tráfego com base no UTM Source
 // Obtendo parâmetros da URL aberta
-function getParameterByName(name, url) {
-  if (!url) url = window.location.href
-  name = name.replace(/[\[\]]/g, "\\$&")
-  let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url)
-  if (!results) return null
-  if (!results[2]) return ""
-  return decodeURIComponent(results[2].replace(/\+/g, " "))
+function obterParametroURL(parametro) {
+  try {
+    const urlAtual = new URL(window.location.href)
+    const urlParams = new URLSearchParams(urlAtual.search)
+    const valorParametro = urlParams.get(parametro)
+
+    if (!valorParametro) {
+      return "acesso-direto"
+    }
+
+    // Sanitização básica do valor
+    const valorSanitizado = valorParametro
+      .trim()
+      .replace(/[^a-z0-9-_]/g, "")
+      .substring(0, 100)
+
+    return valorSanitizado || "acesso-direto"
+  } catch (erro) {
+    console.error("Erro ao obter parâmetro da URL:", erro)
+    return "acesso-direto"
+  }
 }
+
 // Obter o valor do parâmetro UTM source da URL
-let utmSource = getParameterByName("utm_source")
+let utmSource = obterParametroURL("utm_source")
 // Exibir a origem do tráfego
-if (utmSource) {
-  document.getElementById("UTM").textContent = utmSource
-} else {
+if (utmSource === "acesso-direto") {
   document.getElementById("UTM").textContent = "Tráfego direto"
+} else {
+  document.getElementById("UTM").textContent = utmSource
 }
 
 // ======================
@@ -303,6 +329,8 @@ document.addEventListener("DOMContentLoaded", function () {
   obterLoc()
   autoAjusteIdioma()
   carregarLocalStorage()
+  const monitor = new VisitanteMonitor() // Backend
+  monitor.iniciar() // Backend
 })
 
 // ============
@@ -678,37 +706,61 @@ class VisitanteMonitor {
     this.totalCliques = 0
     this.cliquesValidos = 0
     this.tempoInicio = Date.now()
-    this.utmSource = this.obterUTMSource()
+    this.utmSource = obterParametroURL("utm_source") || "acesso-direto"
   }
 
-  // Função para obter UTM Source
-  obterUTMSource() {
-    const urlParams = new URLSearchParams(window.location.search)
-    return urlParams.get("utm_source") || "acesso-direto"
+  formatarData(data) {
+    return data.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
   }
 
-  // Inicializar monitoramento
+  formatarHora(data) {
+    return data.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    })
+  }
+
+  formatarTempoPermanencia(segundos) {
+    const minutos = Math.floor(segundos / 60)
+    const segundosRestantes = segundos % 60
+    return `${String(minutos).padStart(2, "0")} min ${String(
+      segundosRestantes
+    ).padStart(2, "0")} s`
+  }
+
+  validarDados(dados) {
+    if (!dados.visitor_id?.match(/^v_[0-9]{13}_[a-z0-9]{9}$/)) {
+      throw new Error("ID do visitante inválido")
+    }
+    return dados
+  }
+
+  sanitizarTexto(texto) {
+    return texto.replace(/[<>]/g, "")
+  }
+
   iniciar() {
     this.monitorarCliques()
     this.monitorarTempoPermanencia()
     this.registrarVisitante()
   }
 
-  // Monitorar cliques na página
   monitorarCliques() {
     document.addEventListener("click", (event) => {
-      this.totalCliques++
-
+      this.totalCliques = Math.max(0, this.totalCliques + 1)
       const elementosClicaveis = ["A", "BUTTON", "INPUT", "SELECT"]
       if (elementosClicaveis.includes(event.target.tagName)) {
-        this.cliquesValidos++
+        this.cliquesValidos = Math.max(0, this.cliquesValidos + 1)
       }
-
       this.atualizarDados()
     })
   }
 
-  // Calcular tempo de permanência
   monitorarTempoPermanencia() {
     window.addEventListener("beforeunload", () => {
       const tempoPermanencia = Math.floor(
@@ -718,9 +770,23 @@ class VisitanteMonitor {
     })
   }
 
-  // Registrar novo visitante
   async registrarVisitante() {
     try {
+      const dadosVisitante = {
+        visitor_id: this.visitorId,
+        timestamp_inicio: this.timestampInicio.toISOString(),
+        data_acesso_br: this.formatarData(this.timestampInicio),
+        hora_acesso_br: this.formatarHora(this.timestampInicio),
+        sistema_operacional: this.sanitizarTexto(obterSO()),
+        navegador: this.sanitizarTexto(obterBrowser()),
+        utm_source: this.sanitizarTexto(this.utmSource),
+        total_cliques: 0,
+        cliques_validos: 0,
+        tempo_permanencia: "00 min 00 s",
+      }
+
+      const dadosValidados = this.validarDados(dadosVisitante)
+
       const response = await fetch(
         "https://hub-de-links.onrender.com/registrar-visitante",
         {
@@ -728,18 +794,7 @@ class VisitanteMonitor {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            visitor_id: this.visitorId,
-            timestamp_inicio: this.timestampInicio,
-            data_acesso_br: this.timestampInicio.toLocaleDateString("pt-BR"),
-            hora_acesso_br: this.timestampInicio.toLocaleTimeString("pt-BR"),
-            sistema_operacional: platform.os.family,
-            navegador: this.obterBrowser(),
-            utm_source: this.utmSource,
-            total_cliques: 0,
-            cliques_validos: 0,
-            tempo_permanencia: 0,
-          }),
+          body: JSON.stringify(dadosValidados),
         }
       )
 
@@ -751,9 +806,15 @@ class VisitanteMonitor {
     }
   }
 
-  // Atualizar dados do visitante
   async atualizarDados(tempoPermanencia = 0) {
     try {
+      const dadosAtualizacao = {
+        total_cliques: Math.max(0, this.totalCliques),
+        cliques_validos: Math.max(0, this.cliquesValidos),
+        tempo_permanencia: this.formatarTempoPermanencia(tempoPermanencia),
+        utm_source: this.sanitizarTexto(this.utmSource),
+      }
+
       await fetch(
         `https://hub-de-links.onrender.com/atualizar-visitante/${this.visitorId}`,
         {
@@ -761,41 +822,13 @@ class VisitanteMonitor {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            total_cliques: this.totalCliques,
-            cliques_validos: this.cliquesValidos,
-            tempo_permanencia: tempoPermanencia,
-            utm_source: this.utmSource,
-          }),
+          body: JSON.stringify(dadosAtualizacao),
         }
       )
     } catch (erro) {
       console.error("Erro ao atualizar dados:", erro)
     }
   }
-
-  // Obter informações do navegador
-  obterBrowser() {
-    const userAgent = navigator.userAgent
-    const browsers = {
-      chrome: /chrome/i,
-      safari: /safari/i,
-      firefox: /firefox/i,
-      edge: /edge/i,
-      opera: /opera/i,
-    }
-
-    for (const [browser, regex] of Object.entries(browsers)) {
-      if (regex.test(userAgent)) return browser
-    }
-    return "outro"
-  }
 }
-
-// Iniciar monitoramento quando a página carregar
-document.addEventListener("DOMContentLoaded", () => {
-  const monitor = new VisitanteMonitor()
-  monitor.iniciar()
-})
 
 // Desenvolvido por Jota / José Guilherme Pandolfi
