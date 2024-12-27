@@ -12,12 +12,56 @@ const axios = require("axios")
 const app = express()
 const porta = process.env.PORT || 3000
 
+//  Mensagem ao console confirmando inicialização do servidor
 console.log("✅ Servidor Node.JS iniciado!")
 
+// Configuração do CORS
+const origensPermitidas = [
+  process.env.FRONTEND_URL,
+  `http://localhost:${porta}`,
+  "http://localhost",
+  "https://localhost",
+].filter(Boolean)
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || origensPermitidas.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error("Bloqueado pelo CORS"))
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+}
+
 // Middlewares
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(requestIp.mw())
+
+// Headers de segurança adicionais
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", true)
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  )
+  next()
+})
+
+// Tratamento de erros CORS
+app.use((err, req, res, next) => {
+  if (err.message === "Bloqueado pelo CORS") {
+    res.status(403).json({
+      erro: "Acesso não autorizado para esta origem",
+    })
+  } else {
+    next(err)
+  }
+})
 
 // Configuração do pool de conexão
 console.log("⏳ Tentando conectar ao banco de dados...")
