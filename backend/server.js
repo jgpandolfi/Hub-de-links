@@ -14,6 +14,7 @@ require("dotenv").config()
 // Instância do Express
 const app = express()
 const porta = process.env.PORT || 3000
+app.set("trust proxy", 1) // Confiar no Proxy
 
 //  Mensagem ao console confirmando inicialização do servidor
 console.log("✅ Servidor Node.JS iniciado!")
@@ -129,7 +130,7 @@ const criarTabelaVisitantes = `
     utm_source VARCHAR(100) DEFAULT 'acesso-direto',
     total_cliques INTEGER DEFAULT 0,
     cliques_validos INTEGER DEFAULT 0,
-    tempo_permanencia INTEGER DEFAULT 0,
+    tempo_permanencia VARCHAR(15) DEFAULT '00 min 00 s',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 `
@@ -317,8 +318,8 @@ app.post("/registrar-visitante", async (req, res) => {
         visitor_id, timestamp_inicio, data_acesso_br, hora_acesso_br,
         endereco_ip, cidade, estado, pais, sistema_operacional,
         navegador, utm_source, total_cliques, cliques_validos, tempo_permanencia
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-      RETURNING id, visitor_id`
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+        RETURNING id, visitor_id`
 
     const resultado = await pool.query(query, [
       value.visitor_id,
