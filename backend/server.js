@@ -1,5 +1,6 @@
 // Dependências necessárias
 const express = require("express")
+const rateLimit = require("express-rate-limit")
 const { Pool } = require("pg")
 const requestIp = require("request-ip")
 const geoip = require("geoip-lite")
@@ -37,10 +38,37 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 }
 
+// Limiter global para todas as rotas
+const limiterGlobal = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 50, // Limite de 100 requisições por IP
+  message: {
+    erro: "Muitas requisições detectadas. Por favor, aguarde alguns minutos.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+// Limiter específico para rotas de registro
+const limiterVisitantes = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 5, // Limite de 5 tentativas por minuto
+  message: {
+    erro: "Muitos acessos do seu endereço detectados. Aguarde um momento.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
 // Middlewares
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(requestIp.mw())
+
+// Aplica os limitadores (ratelimit)
+app.use(limiterGlobal)
+app.use("/registrar-visitante", limiterVisitantes)
+app.use("/atualizar-visitante", limiterVisitantes)
 
 // Headers de segurança adicionais
 app.use((req, res, next) => {
