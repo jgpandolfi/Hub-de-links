@@ -88,6 +88,7 @@ const schemaRegistrarVisitante = Joi.object({
     .messages({
       "string.pattern.base": "ID do visitante inválido ou mal formatado",
       "any.required": "ID do visitante é obrigatório",
+      "string.empty": "ID do visitante não pode estar vazio",
     }),
   timestamp_inicio: Joi.date().iso().required(),
   data_acesso_br: Joi.string()

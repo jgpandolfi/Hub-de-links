@@ -699,12 +699,13 @@ function carregarLocalStorage() {
 
 class VisitanteMonitor {
   constructor() {
-    this.visitorId = `v_${Date.now()}_${Array.from(
-      crypto.getRandomValues(new Uint8Array(4))
-    )
+    const timestamp = Date.now()
+    const randomBytes = crypto.getRandomValues(new Uint8Array(4))
+    const randomHex = Array.from(randomBytes)
       .map((byte) => byte.toString(16).padStart(2, "0"))
       .join("")
-      .substring(0, 9)}`
+      .substring(0, 9)
+    this.visitorId = `v_${timestamp}_${randomHex}`
     this.timestampInicio = new Date()
     this.totalCliques = 0
     this.cliquesValidos = 0
