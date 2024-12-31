@@ -2,7 +2,8 @@
 import Fastify from "fastify"
 import fastifyCors from "@fastify/cors"
 import fastifyRateLimit from "@fastify/rate-limit"
-import { Pool } from "pg"
+import pkg from "pg"
+const { Pool } = pkg
 import Joi from "joi"
 import sanitizeHtml from "sanitize-html"
 import requestIp from "request-ip"
