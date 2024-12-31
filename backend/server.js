@@ -80,6 +80,49 @@ const pool = new Pool({
   },
 })
 
+// Criação da tabela se ela não existir
+async function criarTabelaSeNaoExistir() {
+  try {
+    const checkTable = `
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'visitantes'
+      );`
+
+    const tableExists = await pool.query(checkTable)
+
+    if (!tableExists.rows[0].exists) {
+      const createTable = `
+        CREATE TABLE visitantes (
+          id SERIAL PRIMARY KEY,
+          visitor_id VARCHAR(50) NOT NULL,
+          timestamp_inicio TIMESTAMP NOT NULL,
+          data_acesso_br VARCHAR(10) NOT NULL,
+          hora_acesso_br VARCHAR(8) NOT NULL,
+          endereco_ip VARCHAR(45),
+          cidade VARCHAR(100),
+          estado VARCHAR(100),
+          pais VARCHAR(100),
+          sistema_operacional VARCHAR(100),
+          navegador VARCHAR(200),
+          utm_source VARCHAR(100) DEFAULT 'acesso-direto',
+          total_cliques INTEGER DEFAULT 0,
+          cliques_validos INTEGER DEFAULT 0,
+          tempo_permanencia VARCHAR(20) DEFAULT '00 min 00 s'
+        );`
+
+      await pool.query(createTable)
+      console.log("✅ Tabela 'visitantes' criada com sucesso")
+    } else {
+      console.log("✅ Tabela 'visitantes' já existe")
+    }
+  } catch (erro) {
+    console.error("❌ Erro ao verificar/criar tabela:", erro)
+    throw erro
+  }
+}
+
 // Schemas de validação
 const schemaRegistrarVisitante = Joi.object({
   visitor_id: Joi.string()
@@ -237,6 +280,9 @@ const start = async () => {
     console.log("⏳ Iniciando conexão com o banco de dados...")
     await pool.connect()
     console.log("✅ Conexão com o banco de dados estabelecida")
+
+    // Adicionar esta linha
+    await criarTabelaSeNaoExistir()
 
     console.log("⏳ Iniciando servidor Fastify...")
     await fastify.listen({

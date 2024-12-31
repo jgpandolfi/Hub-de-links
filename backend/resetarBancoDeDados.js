@@ -1,6 +1,8 @@
-const { Pool } = require("pg")
-const readline = require("readline")
-require("dotenv").config()
+import pg from "pg"
+import * as readline from "readline"
+import "dotenv/config"
+
+const { Pool } = pg
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
