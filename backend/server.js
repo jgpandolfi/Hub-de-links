@@ -83,8 +83,12 @@ const pool = new Pool({
 // Schemas de validação
 const schemaRegistrarVisitante = Joi.object({
   visitor_id: Joi.string()
-    .pattern(/^v_[0-9]{13}(_[a-z0-9]{9})?$/)
-    .required(),
+    .pattern(/^v_\d{13}_[a-f0-9]{9}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "ID do visitante inválido ou mal formatado",
+      "any.required": "ID do visitante é obrigatório",
+    }),
   timestamp_inicio: Joi.date().iso().required(),
   data_acesso_br: Joi.string()
     .pattern(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)
@@ -135,7 +139,11 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     tempo_permanencia: request.body.tempo_permanencia || "00 min 00 s",
   }
 
-  const { error, value } = schemaRegistrarVisitante.validate(dadosVisitante)
+  const { error, value } = schemaRegistrarVisitante.validate(dadosVisitante, {
+    abortEarly: false,
+    stripUnknown: true,
+  })
+
   if (error) {
     console.log("❌ Erro na validação dos dados:", error.details[0].message)
     return reply.code(400).send({
