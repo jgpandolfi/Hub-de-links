@@ -699,17 +699,19 @@ function carregarLocalStorage() {
 
 class VisitanteMonitor {
   constructor() {
-    this.visitorId = `v_${Date.now()}_${Math.random()
-      .toString(36)
-      .substr(2, 9)}`
+    this.visitorId = `v_${Date.now()}_${crypto
+      .getRandomValues(new Uint8Array(4))
+      .reduce((acc, val) => acc + val.toString(36), "")
+      .substr(0, 9)}`
     this.timestampInicio = new Date()
     this.totalCliques = 0
     this.cliquesValidos = 0
     this.tempoInicio = Date.now()
-    this.utmSource = obterParametroURL("utm_source") || "acesso-direto"
+    this.utmSource = this.#obterParametroURL("utm_source") || "acesso-direto"
+    this.atualizacaoPendente = false
   }
 
-  formatarData(data) {
+  #formatarData(data) {
     return data.toLocaleDateString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
@@ -717,7 +719,7 @@ class VisitanteMonitor {
     })
   }
 
-  formatarHora(data) {
+  #formatarHora(data) {
     return data.toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
@@ -725,7 +727,7 @@ class VisitanteMonitor {
     })
   }
 
-  formatarTempoPermanencia(segundos) {
+  #formatarTempoPermanencia(segundos) {
     const minutos = Math.floor(segundos / 60)
     const segundosRestantes = segundos % 60
     return `${String(minutos).padStart(2, "0")} min ${String(
@@ -733,58 +735,81 @@ class VisitanteMonitor {
     ).padStart(2, "0")} s`
   }
 
-  validarDados(dados) {
-    if (!dados.visitor_id?.match(/^v_[0-9]{13}_[a-z0-9]{9}$/)) {
-      throw new Error("ID do visitante inválido")
+  #validarDados(dados) {
+    if (!dados?.visitor_id?.match(/^v_[0-9]{13}_[a-z0-9]{9}$/)) {
+      throw new Error("ID do visitante inválido ou mal formatado")
     }
     return dados
   }
 
-  sanitizarTexto(texto) {
-    return texto.replace(/[<>]/g, "")
+  #sanitizarTexto(texto) {
+    if (!texto) return ""
+    return texto.replace(/[<>]/g, "").trim().substring(0, 200)
   }
 
-  iniciar() {
-    this.monitorarCliques()
-    this.monitorarTempoPermanencia()
-    this.registrarVisitante()
+  #obterParametroURL(parametro) {
+    try {
+      const urlParams = new URLSearchParams(window.location.search)
+      return urlParams.get(parametro)
+    } catch (erro) {
+      console.error(`❌ Erro ao obter parâmetro ${parametro}:`, erro)
+      return null
+    }
   }
 
-  monitorarCliques() {
-    document.addEventListener("click", (event) => {
+  async iniciar() {
+    try {
+      await this.#registrarVisitante()
+      this.#monitorarCliques()
+      this.#monitorarTempoPermanencia()
+      console.log("✅ Monitoramento de visitante iniciado com sucesso")
+    } catch (erro) {
+      console.error("❌ Erro ao iniciar monitoramento:", erro)
+    }
+  }
+
+  #monitorarCliques() {
+    document.addEventListener("click", async (event) => {
       this.totalCliques = Math.max(0, this.totalCliques + 1)
-      const elementosClicaveis = ["A", "BUTTON", "INPUT", "SELECT"]
-      if (elementosClicaveis.includes(event.target.tagName)) {
+
+      const elementosClicaveis = new Set(["A", "BUTTON", "INPUT", "SELECT"])
+      if (elementosClicaveis.has(event.target.tagName)) {
         this.cliquesValidos = Math.max(0, this.cliquesValidos + 1)
       }
-      this.atualizarDados()
+
+      if (!this.atualizacaoPendente) {
+        this.atualizacaoPendente = true
+        await this.#debounceAtualizacao()
+      }
     })
   }
 
-  monitorarTempoPermanencia() {
-    window.addEventListener("beforeunload", () => {
+  #monitorarTempoPermanencia() {
+    window.addEventListener("beforeunload", async (event) => {
       const segundosTotal = Math.floor((Date.now() - this.tempoInicio) / 1000)
-      const tempoFormatado = this.formatarTempoPermanencia(segundosTotal)
-      this.atualizarDados(tempoFormatado)
+      const tempoFormatado = this.#formatarTempoPermanencia(segundosTotal)
+
+      // Garante que a última atualização seja enviada
+      await this.#atualizarDados(tempoFormatado)
     })
   }
 
-  async registrarVisitante() {
+  async #registrarVisitante() {
     try {
       const dadosVisitante = {
         visitor_id: this.visitorId,
         timestamp_inicio: this.timestampInicio.toISOString(),
-        data_acesso_br: this.formatarData(this.timestampInicio),
-        hora_acesso_br: this.formatarHora(this.timestampInicio),
-        sistema_operacional: this.sanitizarTexto(obterSO()),
-        navegador: this.sanitizarTexto(obterBrowser()),
-        utm_source: this.sanitizarTexto(this.utmSource),
+        data_acesso_br: this.#formatarData(this.timestampInicio),
+        hora_acesso_br: this.#formatarHora(this.timestampInicio),
+        sistema_operacional: this.#sanitizarTexto(obterSO()),
+        navegador: this.#sanitizarTexto(obterBrowser()),
+        utm_source: this.#sanitizarTexto(this.utmSource),
         total_cliques: 0,
         cliques_validos: 0,
         tempo_permanencia: "00 min 00 s",
       }
 
-      const dadosValidados = this.validarDados(dadosVisitante)
+      const dadosValidados = this.#validarDados(dadosVisitante)
 
       const response = await fetch(
         "https://hub-de-links.onrender.com/registrar-visitante",
@@ -798,23 +823,41 @@ class VisitanteMonitor {
       )
 
       if (!response.ok) {
-        throw new Error("Erro ao registrar visitante")
+        const erro = await response.json()
+        throw new Error(
+          `Falha ao registrar visitante: ${
+            erro.mensagem || response.statusText
+          }`
+        )
       }
+
+      console.log("✅ Visitante registrado com sucesso")
     } catch (erro) {
-      console.error("Erro:", erro)
+      console.error("❌ Erro ao registrar visitante:", erro)
+      throw erro
     }
   }
 
-  async atualizarDados(tempoPermanencia = "00 min 00 s") {
+  #debounceAtualizacao = debounce(async () => {
+    try {
+      await this.#atualizarDados()
+      this.atualizacaoPendente = false
+    } catch (erro) {
+      console.error("❌ Erro no debounce de atualização:", erro)
+      this.atualizacaoPendente = false
+    }
+  }, 2000)
+
+  async #atualizarDados(tempoPermanencia = "00 min 00 s") {
     try {
       const dadosAtualizacao = {
         total_cliques: Math.max(0, this.totalCliques),
         cliques_validos: Math.max(0, this.cliquesValidos),
         tempo_permanencia: tempoPermanencia,
-        utm_source: this.sanitizarTexto(this.utmSource),
+        utm_source: this.#sanitizarTexto(this.utmSource),
       }
 
-      await fetch(
+      const response = await fetch(
         `https://hub-de-links.onrender.com/atualizar-visitante/${this.visitorId}`,
         {
           method: "PUT",
@@ -824,9 +867,30 @@ class VisitanteMonitor {
           body: JSON.stringify(dadosAtualizacao),
         }
       )
+
+      if (!response.ok) {
+        const erro = await response.json()
+        throw new Error(
+          `Falha ao atualizar dados: ${erro.mensagem || response.statusText}`
+        )
+      }
     } catch (erro) {
-      console.error("Erro ao atualizar dados:", erro)
+      console.error("❌ Erro ao atualizar dados:", erro)
+      throw erro
     }
+  }
+}
+
+// Função utilitária para debounce
+function debounce(func, wait) {
+  let timeout
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
   }
 }
 
