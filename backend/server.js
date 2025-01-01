@@ -177,7 +177,7 @@ async function obterGeolocalizacao(ip) {
       pais: ipinfoData.country || "Desconhecido",
     }
   } catch (erro) {
-    console.error("Erro ao obter geolocalização:", erro)
+    console.error("❌ Erro ao obter geolocalização do visitante:", erro)
     return {
       cidade: "Desconhecido",
       estado: "Desconhecido",
