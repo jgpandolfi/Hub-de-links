@@ -199,23 +199,59 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   try {
     console.log("⏳ Salvando dados no banco...")
 
-    const query = `
-      INSERT INTO visitantes (
-        visitor_id, timestamp_inicio, data_acesso_br, hora_acesso_br,
-        endereco_ip, cidade, estado, pais, sistema_operacional,
-        navegador, utm_source, total_cliques, cliques_validos, tempo_permanencia
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-      RETURNING id, visitor_id
-    `
-    const resultado = await pool.query(query, Object.values(value))
+    // Garantir que todos os campos necessários estejam presentes
+    const dadosCompletos = {
+      visitor_id: value.visitor_id,
+      timestamp_inicio: value.timestamp_inicio,
+      data_acesso_br: value.data_acesso_br,
+      hora_acesso_br: value.hora_acesso_br,
+      endereco_ip: value.endereco_ip || "Desconhecido",
+      cidade: value.cidade || "Desconhecido",
+      estado: value.estado || "Desconhecido",
+      pais: value.pais || "Desconhecido",
+      sistema_operacional: value.sistema_operacional || "Desconhecido",
+      navegador: value.navegador || "Desconhecido",
+      utm_source: value.utm_source || "acesso-direto",
+      total_cliques: value.total_cliques || 0,
+      cliques_validos: value.cliques_validos || 0,
+      tempo_permanencia: value.tempo_permanencia || "00 min 00 s",
+    }
 
+    const query = `
+    INSERT INTO visitantes (
+      visitor_id, timestamp_inicio, data_acesso_br, hora_acesso_br,
+      endereco_ip, cidade, estado, pais, sistema_operacional,
+      navegador, utm_source, total_cliques, cliques_validos, tempo_permanencia
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+    RETURNING id, visitor_id
+  `
+
+    const valores = [
+      dadosCompletos.visitor_id,
+      dadosCompletos.timestamp_inicio,
+      dadosCompletos.data_acesso_br,
+      dadosCompletos.hora_acesso_br,
+      dadosCompletos.endereco_ip,
+      dadosCompletos.cidade,
+      dadosCompletos.estado,
+      dadosCompletos.pais,
+      dadosCompletos.sistema_operacional,
+      dadosCompletos.navegador,
+      dadosCompletos.utm_source,
+      dadosCompletos.total_cliques,
+      dadosCompletos.cliques_validos,
+      dadosCompletos.tempo_permanencia,
+    ]
+
+    const resultado = await pool.query(query, valores)
     console.log("✅ Dados salvos com sucesso no banco")
 
-    await enviarNotificacaoDiscord(value)
+    await enviarNotificacaoDiscord(dadosCompletos)
 
     fastify.log.info(
       `✅ Novo visitante registrado: ${resultado.rows[0].visitor_id}`
     )
+
     return reply.code(201).send({
       mensagem: "Visitante registrado com sucesso",
       id: resultado.rows[0].id,
