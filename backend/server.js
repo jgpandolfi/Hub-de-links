@@ -152,13 +152,47 @@ const schemaRegistrarVisitante = Joi.object({
 
 console.log("✅ Schemas de validação configurados")
 
+// Função para obter a geolocalização do usuário baseado no IP
+async function obterGeolocalizacao(ip) {
+  try {
+    // Primeira tentativa com ipapi.co
+    const response = await axios.get(`https://ipapi.co/${ip}/json/`)
+    const data = response.data
+
+    if (data.city && data.region && data.country_name) {
+      return {
+        cidade: data.city,
+        estado: data.region,
+        pais: data.country_name,
+      }
+    }
+
+    // Segunda tentativa com ipinfo.io
+    const ipinfoResponse = await axios.get(`https://ipinfo.io/${ip}/json`)
+    const ipinfoData = ipinfoResponse.data
+
+    return {
+      cidade: ipinfoData.city || "Desconhecido",
+      estado: ipinfoData.region || "Desconhecido",
+      pais: ipinfoData.country || "Desconhecido",
+    }
+  } catch (erro) {
+    console.error("Erro ao obter geolocalização:", erro)
+    return {
+      cidade: "Desconhecido",
+      estado: "Desconhecido",
+      pais: "Desconhecido",
+    }
+  }
+}
+
 // Rotas
 fastify.post("/registrar-visitante", async (request, reply) => {
   console.log("⏳ Processando novo registro de visitante...")
 
   const ip = requestIp.getClientIp(request)
   const userAgent = useragent.parse(request.headers["user-agent"])
-  const geolocalizacao = geoip.lookup(ip)
+  const geolocalizacao = await obterGeolocalizacao(ip)
   const agora = new Date()
 
   console.log("✅ Dados iniciais do visitante coletados:", {
@@ -172,9 +206,9 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     data_acesso_br: agora.toLocaleDateString("pt-BR"),
     hora_acesso_br: agora.toLocaleTimeString("pt-BR"),
     endereco_ip: ip,
-    cidade: sanitizeHtml(geolocalizacao?.city || "Desconhecido"),
-    estado: sanitizeHtml(geolocalizacao?.region || "Desconhecido"),
-    pais: sanitizeHtml(geolocalizacao?.country || "Desconhecido"),
+    cidade: sanitizeHtml(geolocalizacao?.cidade || "Desconhecido"),
+    estado: sanitizeHtml(geolocalizacao?.estado || "Desconhecido"),
+    pais: sanitizeHtml(geolocalizacao?.pais || "Desconhecido"),
     sistema_operacional: sanitizeHtml(userAgent.os.toString()),
     navegador: sanitizeHtml(userAgent.toAgent()),
     utm_source: sanitizeHtml(request.body.utm_source || "acesso-direto"),
