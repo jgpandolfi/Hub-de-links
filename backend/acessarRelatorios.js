@@ -1,8 +1,19 @@
 // Dependências necessárias
-const { Pool } = require("pg")
-const readline = require("readline")
-const fs = require("fs")
-require("dotenv").config()
+import pkg from "pg"
+const { Pool } = pkg
+
+import readline from "readline"
+import fs from "fs"
+import { config } from "dotenv"
+import { fileURLToPath } from "url"
+import { dirname } from "path"
+
+// Configurar __dirname no ES Module
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+// Carregar variáveis de ambiente
+config()
 
 // Configuração do pool de conexão
 console.log("⏳ Tentando conectar ao banco de dados...")
