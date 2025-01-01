@@ -267,6 +267,78 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   }
 })
 
+// Rota para atualizar dados do visitante
+fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
+  console.log("⏳ Processando atualização de dados do visitante...")
+
+  // Schema de validação para atualização
+  const schemaAtualizarVisitante = Joi.object({
+    total_cliques: Joi.number().integer().min(0).required(),
+    cliques_validos: Joi.number().integer().min(0).required(),
+    tempo_permanencia: Joi.string()
+      .pattern(/^[0-9]{2} min [0-9]{2} s$/)
+      .required(),
+    utm_source: Joi.string().max(100).required(),
+  })
+
+  try {
+    // Validação dos dados recebidos
+    const { error, value } = schemaAtualizarVisitante.validate(request.body, {
+      abortEarly: false,
+      stripUnknown: true,
+    })
+
+    if (error) {
+      console.log("❌ Erro na validação dos dados:", error.details[0].message)
+      return reply.code(400).send({
+        erro: "Dados de atualização inválidos",
+        detalhes: error.details[0].message,
+      })
+    }
+
+    // Query para atualizar os dados do visitante
+    const query = `
+      UPDATE visitantes 
+      SET 
+        total_cliques = $1,
+        cliques_validos = $2,
+        tempo_permanencia = $3,
+        utm_source = $4
+      WHERE visitor_id = $5
+      RETURNING *
+    `
+
+    const valores = [
+      value.total_cliques,
+      value.cliques_validos,
+      value.tempo_permanencia,
+      value.utm_source,
+      request.params.visitor_id,
+    ]
+
+    const resultado = await pool.query(query, valores)
+
+    if (resultado.rowCount === 0) {
+      console.log("❌ Visitante não encontrado:", request.params.visitor_id)
+      return reply.code(404).send({
+        erro: "Visitante não encontrado",
+      })
+    }
+
+    console.log("✅ Dados do visitante atualizados com sucesso")
+    return reply.code(200).send({
+      mensagem: "Dados atualizados com sucesso",
+      dados: resultado.rows[0],
+    })
+  } catch (erro) {
+    console.error("❌ Erro ao atualizar dados:", erro)
+    return reply.code(500).send({
+      erro: "Erro interno ao atualizar dados do visitante",
+      detalhes: erro.message,
+    })
+  }
+})
+
 // Função para enviar notificação ao Discord
 async function enviarNotificacaoDiscord(dadosVisitante) {
   console.log("⏳ Enviando notificação ao Discord...")
