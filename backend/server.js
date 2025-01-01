@@ -7,12 +7,11 @@ const { Pool } = pkg
 import Joi from "joi"
 import sanitizeHtml from "sanitize-html"
 import requestIp from "request-ip"
-import geoip from "geoip-lite"
 import useragent from "useragent"
 import axios from "axios"
 import "dotenv/config"
 
-console.log("✅ Iniciando configuração do servidor...")
+console.log("⏳ Iniciando configuração do servidor...")
 
 // Instância do Fastify
 const fastify = Fastify({
@@ -20,7 +19,7 @@ const fastify = Fastify({
   trustProxy: true,
 })
 
-console.log("✅ Instância do Fastify criada com sucesso")
+console.log("✅ Instância do Fastify configurada com sucesso!")
 
 // Configuração do CORS
 const origensPermitidas = [
@@ -30,7 +29,7 @@ const origensPermitidas = [
   "https://localhost",
 ].filter(Boolean)
 
-console.log("✅ Origens CORS permitidas:", origensPermitidas)
+console.log("📃 Origens CORS permitidas:", origensPermitidas)
 
 await fastify.register(fastifyCors, {
   origin: (origin, cb) => {
@@ -46,7 +45,7 @@ await fastify.register(fastifyCors, {
   credentials: true,
 })
 
-console.log("✅ Configuração CORS aplicada com sucesso")
+console.log("✅ Configuração CORS aplicada com sucesso!")
 
 // Rate Limiting
 await fastify.register(fastifyRateLimit, {
@@ -57,7 +56,7 @@ await fastify.register(fastifyRateLimit, {
     "Muitas requisições detectadas. Por favor, aguarde alguns minutos.",
 })
 
-console.log("✅ Rate limit global configurado")
+console.log("✅ Rate limit global configurado!")
 
 // Rate Limit específico para rotas de visitantes
 await fastify.register(fastifyRateLimit, {
@@ -68,7 +67,7 @@ await fastify.register(fastifyRateLimit, {
   routePrefix: ["/registrar-visitante", "/atualizar-visitante"],
 })
 
-console.log("✅ Rate limit específico para rotas de visitantes configurado")
+console.log("✅ Rate limit específico para rotas de visitantes configurado!")
 
 // Configuração do pool de conexão PostgreSQL
 console.log("⏳ Tentando estabelecer conexão com o banco de dados...")
@@ -150,34 +149,73 @@ const schemaRegistrarVisitante = Joi.object({
     .default("00 min 00 s"),
 })
 
-console.log("✅ Schemas de validação configurados")
+console.log("✅ Schemas de validação configurados!")
 
-// Função para obter a geolocalização do usuário baseado no IP
+// Obter e limpar o IP real do visitante
+function obterIpReal(request) {
+  const ip =
+    request.headers["x-forwarded-for"] ||
+    request.headers["x-real-ip"] ||
+    request.socket.remoteAddress ||
+    requestIp.getClientIp(request)
+
+  // Remove o prefixo IPv6, se existir
+  return ip?.replace(/^.*:/, "") || null
+}
+
+// Obter a geolocalização do usuário baseado no IP
 async function obterGeolocalizacao(ip) {
+  console.log("⏳ Tentando obter geolocalização para IP:", ip)
+
   try {
     // Primeira tentativa com ipapi.co
-    const response = await axios.get(`https://ipapi.co/${ip}/json/`)
-    const data = response.data
+    console.log("⏳ Tentando ipapi.co...")
+    const response = await axios.get(`https://ipapi.co/${ip}/json/`, {
+      timeout: 5000,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "Mozilla/5.0",
+      },
+    })
 
-    if (data.city && data.region && data.country_name) {
+    console.log("🔎 Resposta ipapi.co:", response.data)
+
+    if (
+      response.data.city &&
+      response.data.region &&
+      response.data.country_name
+    ) {
       return {
-        cidade: data.city,
-        estado: data.region,
-        pais: data.country_name,
+        cidade: response.data.city,
+        estado: response.data.region,
+        pais: response.data.country_name,
       }
     }
 
-    // Segunda tentativa com ipinfo.io
-    const ipinfoResponse = await axios.get(`https://ipinfo.io/${ip}/json`)
-    const ipinfoData = ipinfoResponse.data
+    // (Fallback) Segunda tentativa com ipinfo.io
+    console.log("⏳ Tentando ipinfo.io...")
+    const ipinfoResponse = await axios.get(`https://ipinfo.io/${ip}/json`, {
+      timeout: 5000,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "Mozilla/5.0",
+      },
+    })
+
+    console.log("🔎 Resposta ipinfo.io:", ipinfoResponse.data)
 
     return {
-      cidade: ipinfoData.city || "Desconhecido",
-      estado: ipinfoData.region || "Desconhecido",
-      pais: ipinfoData.country || "Desconhecido",
+      cidade: ipinfoResponse.data.city || "Desconhecido",
+      estado: ipinfoResponse.data.region || "Desconhecido",
+      pais: ipinfoResponse.data.country || "Desconhecido",
     }
   } catch (erro) {
-    console.error("❌ Erro ao obter geolocalização do visitante:", erro)
+    console.error("❌ Erro detalhado na geolocalização:", {
+      mensagem: erro.message,
+      codigo: erro.code,
+      resposta: erro.response?.data,
+    })
+
     return {
       cidade: "Desconhecido",
       estado: "Desconhecido",
@@ -187,13 +225,22 @@ async function obterGeolocalizacao(ip) {
 }
 
 // Rotas
+// Rota para registro de novo visitante
 fastify.post("/registrar-visitante", async (request, reply) => {
   console.log("⏳ Processando novo registro de visitante...")
 
-  const ip = requestIp.getClientIp(request)
-  const userAgent = useragent.parse(request.headers["user-agent"])
-  const geolocalizacao = await obterGeolocalizacao(ip)
   const agora = new Date()
+  const ip = obterIpReal(request)
+  const userAgent = useragent.parse(request.headers["user-agent"])
+
+  if (!ip) {
+    console.error("❌ Não foi possível obter o IP do visitante")
+    return reply.code(400).send({
+      erro: "IP do visitante não identificado",
+    })
+  }
+
+  const geolocalizacao = await obterGeolocalizacao(ip)
 
   console.log("✅ Dados iniciais do visitante coletados:", {
     ip,
@@ -410,7 +457,7 @@ async function enviarNotificacaoDiscord(dadosVisitante) {
     }
 
     await axios.post(process.env.DISCORD_WEBHOOK_URL, mensagem)
-    console.log("✅ Notificação enviada ao Discord com sucesso")
+    console.log("✅ Notificação enviada ao Discord com sucesso!")
   } catch (erro) {
     console.log("❌ Erro ao enviar notificação ao Discord:", erro.message)
   }
@@ -421,7 +468,7 @@ const start = async () => {
   try {
     console.log("⏳ Iniciando conexão com o banco de dados...")
     await pool.connect()
-    console.log("✅ Conexão com o banco de dados estabelecida")
+    console.log("✅ Conexão com o banco de dados estabelecida com êxito!")
 
     // Adicionar esta linha
     await criarTabelaSeNaoExistir()
@@ -431,7 +478,7 @@ const start = async () => {
       port: process.env.PORT || 3000,
       host: "0.0.0.0",
     })
-    console.log("✅ Servidor Fastify iniciado com sucesso")
+    console.log("✅ Servidor Fastify iniciado com sucesso!")
   } catch (erro) {
     console.log("❌ Erro fatal ao iniciar servidor:", erro)
     fastify.log.error(erro)
