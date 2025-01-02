@@ -755,8 +755,14 @@ class MonitorVisitante {
     }),
 
     duracao: (segundos) => {
-      const minutos = Math.floor(segundos / 60)
-      const segundosRestantes = segundos % 60
+      let minutos = Math.floor(segundos / 60)
+      let segundosRestantes = segundos % 60
+
+      // Garante que minutos e segundos não ultrapassem os valores máximos para cada
+      minutos = minutos > 99 ? 99 : minutos
+      segundosRestantes = segundosRestantes > 59 ? 59 : segundosRestantes
+
+      // Formata a string com padding de zeros à esquerda
       return `${minutos.toString().padStart(2, "0")} min ${segundosRestantes
         .toString()
         .padStart(2, "0")} s`
@@ -891,7 +897,10 @@ class MonitorVisitante {
 
   #atualizacaoComDelay = debounce(async () => {
     try {
-      await this.#atualizarDadosVisitante()
+      const duracao = Math.floor(
+        (Date.now() - this.#estado.horarioInicio) / 1000
+      )
+      await this.#atualizarDadosVisitante(this.#formatadores.duracao(duracao))
     } finally {
       this.#estado.atualizacaoPendente = false
     }
