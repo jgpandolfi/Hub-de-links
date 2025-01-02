@@ -157,12 +157,14 @@ const schemaRegistrarVisitante = Joi.object({
 
 // Schema de validação para atualização de dados de visitante
 const schemaAtualizarVisitante = Joi.object({
+  visitor_id: Joi.string()
+    .pattern(/^v_\d{13}_[a-f0-9]{9}$/)
+    .required(),
   total_cliques: Joi.number().integer().min(0).default(0),
   cliques_validos: Joi.number().integer().min(0).default(0),
   tempo_permanencia: Joi.string()
     .pattern(/^[0-9]{2} min [0-9]{2} s$/)
     .default("00 min 00 s"),
-  utm_source: Joi.string().max(100).default("Acesso Direto"),
 })
 
 console.log("✅ Schemas de validação configurados!")
@@ -371,9 +373,18 @@ fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
   console.log("⏳ Processando atualização de dados do visitante...")
 
   try {
+    const dadosAtVisitante = {
+      visitor_id: sanitizeHtml(request.body.visitor_id),
+      total_cliques: parseInt(request.body.total_cliques || 0),
+      cliques_validos: parseInt(request.body.cliques_validos || 0),
+      tempo_permanencia: sanitizeHtml(
+        request.body.tempo_permanencia || "00 min 00 s"
+      ),
+    }
+
     // Validação dos dados recebidos
-    const { error, value: dadosAtualizacaoValidados } =
-      schemaAtualizarVisitante.validate(request.body, {
+    const { error, value: dadosAtValidados } =
+      schemaAtualizarVisitante.validate(dadosAtVisitante, {
         abortEarly: false,
         stripUnknown: true,
       })
@@ -390,19 +401,18 @@ fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
     const query = `
       UPDATE visitantes 
       SET 
-        total_cliques = $1,
-        cliques_validos = $2,
-        tempo_permanencia = $3,
-        utm_source = $4
-      WHERE visitor_id = $5
+        total_cliques = $2,
+        cliques_validos = $3,
+        tempo_permanencia = $4
+      WHERE visitor_id = $1
       RETURNING *
     `
 
     // Array com os dados de atualização do visitante validados para envio via query
-    const dadosAtualiValiArray = Object.values(dadosAtualizacaoValidados)
+    const dadosAtValidadosArray = Object.values(dadosAtValidados)
 
     // Envia a query ao banco de dados
-    const resultado = await pool.query(query, dadosAtualiValiArray)
+    const resultado = await pool.query(query, dadosAtValidadosArray)
 
     if (resultado.rowCount === 0) {
       console.log("❌ Visitante não encontrado:", request.params.visitor_id)
