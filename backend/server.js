@@ -290,7 +290,7 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     tempo_permanencia: request.body.tempo_permanencia || "00 min 00 s",
   }
 
-  const { error } = schemaRegistrarVisitante.validate(dadosVisitante, {
+  const { error, value } = schemaRegistrarVisitante.validate(dadosVisitante, {
     abortEarly: false,
     stripUnknown: true,
   })
@@ -316,7 +316,7 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   `
 
     // Objeto para array
-    const dadosVisitanteArray = Object.values(dadosVisitante)
+    const dadosVisitanteArray = Object.values(value)
 
     // Enviar query ao banco de dados
     const resultado = await pool.query(query, dadosVisitanteArray)
@@ -385,15 +385,11 @@ fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
       RETURNING *
     `
 
-    const valores = [
-      value.total_cliques,
-      value.cliques_validos,
-      value.tempo_permanencia,
-      value.utm_source,
-      request.params.visitor_id,
-    ]
+    // Array com os dados enviados via query
+    const arrayDeValores = Object.values(value)
 
-    const resultado = await pool.query(query, valores)
+    // Envia a query ao banco de dados
+    const resultado = await pool.query(query, arrayDeValores)
 
     if (resultado.rowCount === 0) {
       console.log("❌ Visitante não encontrado:", request.params.visitor_id)
