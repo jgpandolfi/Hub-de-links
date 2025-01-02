@@ -16,7 +16,6 @@ const __dirname = dirname(__filename)
 config()
 
 // Configuração do pool de conexão
-console.log("⏳ Tentando conectar ao banco de dados...")
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -42,6 +41,29 @@ function formatarData(data) {
   })
 }
 
+// Função para perguntar ao usuário se deseja continuar
+function perguntarContinuar() {
+  console.log("\nPressione:")
+  console.log("1 - Gerar novo relatório")
+  console.log("ESC - Sair do programa")
+
+  process.stdin.setRawMode(true)
+  process.stdin.resume()
+  process.stdin.on("data", (key) => {
+    if (key[0] === 27) {
+      // ESC
+      console.log("\n✅ Programa encerrado!")
+      process.exit(0)
+    } else if (key[0] === 49) {
+      // 1
+      process.stdin.setRawMode(false)
+      process.stdin.removeAllListeners("data")
+      console.clear()
+      gerarRelatorio()
+    }
+  })
+}
+
 // Função principal
 async function gerarRelatorio() {
   try {
@@ -56,18 +78,19 @@ async function gerarRelatorio() {
       try {
         // Query para buscar os dados
         const query = `
-          SELECT *
-          FROM visitantes
-          WHERE timestamp_inicio >= NOW() - INTERVAL '${dias} days'
-          ORDER BY timestamp_inicio DESC;
-        `
+                    SELECT *
+                    FROM visitantes
+                    WHERE timestamp_inicio >= NOW() - INTERVAL '${dias} days'
+                    ORDER BY timestamp_inicio DESC;
+                `
 
         const resultado = await pool.query(query)
         const visitantes = resultado.rows
 
         if (visitantes.length === 0) {
           console.log("❌ Nenhum visitante encontrado neste período")
-          process.exit(0)
+          perguntarContinuar()
+          return
         }
 
         // Preparar conteúdo do relatório
@@ -90,7 +113,7 @@ async function gerarRelatorio() {
           conteudoRelatorio += `Origem do tráfego: ${visitante.utm_source}\n`
           conteudoRelatorio += `Total de cliques: ${visitante.total_cliques}\n`
           conteudoRelatorio += `Cliques válidos: ${visitante.cliques_validos}\n`
-          conteudoRelatorio += `Tempo de permanência: ${visitante.tempo_permanencia} segundos\n`
+          conteudoRelatorio += `Tempo de permanência: ${visitante.tempo_permanencia}\n`
           conteudoRelatorio += "\n" + "=".repeat(50) + "\n\n"
         })
 
@@ -104,26 +127,24 @@ async function gerarRelatorio() {
         fs.writeFileSync(nomeArquivo, conteudoRelatorio)
         console.log(`✅ Relatório gerado com sucesso: ${nomeArquivo}`)
 
-        // Fechar conexões
-        rl.close()
-        await pool.end()
-        process.exit(0)
+        perguntarContinuar()
       } catch (erro) {
         console.error("❌ Erro ao gerar relatório:", erro.message)
-        process.exit(1)
+        perguntarContinuar()
       }
     })
   } catch (erro) {
     console.error("❌ Erro ao conectar com banco de dados:", erro.message)
-    process.exit(1)
+    perguntarContinuar()
   }
 }
 
 // Iniciar o programa
+console.clear()
 gerarRelatorio()
 
 // Tratamento de erros não capturados
 process.on("unhandledRejection", (erro) => {
   console.error("❌ Erro não tratado:", erro)
-  process.exit(1)
+  perguntarContinuar()
 })
