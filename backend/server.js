@@ -374,7 +374,7 @@ fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
 
   try {
     const dadosAtVisitante = {
-      visitor_id: sanitizeHtml(request.body.visitor_id),
+      visitor_id: sanitizeHtml(request.params.visitor_id),
       total_cliques: parseInt(request.body.total_cliques || 0),
       cliques_validos: parseInt(request.body.cliques_validos || 0),
       tempo_permanencia: sanitizeHtml(

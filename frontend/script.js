@@ -899,7 +899,6 @@ class MonitorVisitante {
 
   async #atualizarDadosVisitante(tempoPermanencia = "00 min 00 s") {
     const dadosAtualizacao = {
-      visitor_id: this.#estado.idVisitante,
       total_cliques: this.#estado.cliques,
       cliques_validos: this.#estado.cliquesValidos,
       tempo_permanencia: tempoPermanencia,
