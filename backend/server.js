@@ -17,6 +17,7 @@ console.log("⏳ Iniciando configuração do servidor...")
 const fastify = Fastify({
   logger: true,
   trustProxy: true,
+  proxyPayloads: false,
 })
 
 console.log("✅ Instância do Fastify configurada com sucesso!")
@@ -159,8 +160,11 @@ function obterIpReal(request) {
     request.socket.remoteAddress ||
     requestIp.getClientIp(request)
 
+  // Remover os IPs dos proxies (por exemplo, Cloudflare)
+  const ipLimpo = ip?.split(",")[0]?.trim()
+
   // Remove o prefixo IPv6, se existir
-  return ip?.replace(/^.*:/, "") || null
+  return ipLimpo?.replace(/^.*:/, "") || null
 }
 
 // Obter a geolocalização do usuário baseado no IP
