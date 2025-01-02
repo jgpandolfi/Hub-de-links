@@ -315,8 +315,11 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     RETURNING id, visitor_id
   `
 
+    // Objeto para array
+    const dadosVisitanteArray = Object.values(dadosVisitante)
+
     // Enviar query ao banco de dados
-    const resultado = await pool.query(query, dadosVisitante)
+    const resultado = await pool.query(query, dadosVisitanteArray)
     console.log("✅ Dados salvos com sucesso no banco")
 
     // Enviar notificação ao Discord
