@@ -311,13 +311,11 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     ),
   }
 
-  const { error, dadosVisitanteValidados } = schemaRegistrarVisitante.validate(
-    dadosVisitante,
-    {
+  const { error, value: dadosVisitanteValidados } =
+    schemaRegistrarVisitante.validate(dadosVisitante, {
       abortEarly: false,
       stripUnknown: true,
-    }
-  )
+    })
 
   if (error) {
     console.log("❌ Erro na validação dos dados:", error.details[0].message)
@@ -374,7 +372,7 @@ fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
 
   try {
     // Validação dos dados recebidos
-    const { error, dadosAtualizacaoValidados } =
+    const { error, value: dadosAtualizacaoValidados } =
       schemaAtualizarVisitante.validate(request.body, {
         abortEarly: false,
         stripUnknown: true,
