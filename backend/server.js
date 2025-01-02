@@ -184,11 +184,23 @@ async function obterGeolocalizacao(ip) {
 
     console.log("🔎 Resposta ipapi.co:", response.data)
 
+    // Verifica se a resposta da API contém erro
+    if (response.data.error) {
+      throw new Error(response.data.reason || "Erro na API ipapi.co")
+    }
+
+    // Se tiver os dados requisitados, retorna imediatamente
     if (
       response.data.city &&
       response.data.region &&
       response.data.country_name
     ) {
+      console.log("✅ Dados de localização obtidos com sucesso:", {
+        cidade: response.data.city,
+        estado: response.data.region,
+        pais: response.data.country_name,
+      })
+
       return {
         cidade: response.data.city,
         estado: response.data.region,
@@ -208,11 +220,26 @@ async function obterGeolocalizacao(ip) {
 
     console.log("🔎 Resposta ipinfo.io:", ipinfoResponse.data)
 
-    return {
-      cidade: ipinfoResponse.data.city || "Desconhecido",
-      estado: ipinfoResponse.data.region || "Desconhecido",
-      pais: ipinfoResponse.data.country || "Desconhecido",
+    // Verifica se a resposta do ipinfo.io é válida
+    if (
+      ipinfoResponse.data.city &&
+      ipinfoResponse.data.region &&
+      ipinfoResponse.data.country
+    ) {
+      console.log("✅ Dados de localização obtidos com sucesso (fallback):", {
+        cidade: ipinfoResponse.data.city,
+        estado: ipinfoResponse.data.region,
+        pais: ipinfoResponse.data.country,
+      })
+
+      return {
+        cidade: ipinfoResponse.data.city,
+        estado: ipinfoResponse.data.region,
+        pais: ipinfoResponse.data.country,
+      }
     }
+
+    throw new Error("Nenhuma API retornou dados válidos")
   } catch (erro) {
     console.error("❌ Erro detalhado na geolocalização:", {
       mensagem: erro.message,
