@@ -134,10 +134,10 @@ const schemaRegistrarVisitante = Joi.object({
     }),
   timestamp_inicio: Joi.date().iso().required(),
   data_acesso_br: Joi.string()
-    .pattern(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)
+    .pattern(/^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/)
     .required(),
   hora_acesso_br: Joi.string()
-    .pattern(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/)
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
     .required(),
   endereco_ip: Joi.string()
     .ip({ version: ["ipv4", "ipv6"], cidr: "optional" })
@@ -151,7 +151,7 @@ const schemaRegistrarVisitante = Joi.object({
   total_cliques: Joi.number().integer().min(0).default(0),
   cliques_validos: Joi.number().integer().min(0).default(0),
   tempo_permanencia: Joi.string()
-    .pattern(/^[0-9]{2} min [0-9]{2} s$/)
+    .pattern(/^\d{2} min [0-5]\d s$/)
     .default("00 min 00 s"),
 })
 
@@ -163,7 +163,7 @@ const schemaAtualizarVisitante = Joi.object({
   total_cliques: Joi.number().integer().min(0).default(0),
   cliques_validos: Joi.number().integer().min(0).default(0),
   tempo_permanencia: Joi.string()
-    .pattern(/^[0-9]{2} min [0-9]{2} s$/)
+    .pattern(/^\d{2} min [0-5]\d s$/)
     .default("00 min 00 s"),
 })
 
