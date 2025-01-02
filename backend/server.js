@@ -271,12 +271,7 @@ fastify.post("/registrar-visitante", async (request, reply) => {
 
   const geolocalizacao = await obterGeolocalizacao(ip)
 
-  console.log("📍 Dados de geolocalização obtidos:", geolocalizacao)
-
-  console.log("✅ Dados iniciais do visitante coletados:", {
-    ip,
-    userAgent: userAgent.toString(),
-  })
+  console.log("✅ Dados iniciais do visitante coletados!")
 
   const dadosVisitante = {
     visitor_id: request.body.visitor_id,
@@ -295,7 +290,7 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     tempo_permanencia: request.body.tempo_permanencia || "00 min 00 s",
   }
 
-  const { error, value } = schemaRegistrarVisitante.validate(dadosVisitante, {
+  const { error } = schemaRegistrarVisitante.validate(dadosVisitante, {
     abortEarly: false,
     stripUnknown: true,
   })
@@ -311,24 +306,6 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   try {
     console.log("⏳ Salvando dados no banco...")
 
-    // Garantir que todos os campos necessários estejam presentes
-    const dadosCompletos = {
-      visitor_id: value.visitor_id,
-      timestamp_inicio: value.timestamp_inicio,
-      data_acesso_br: value.data_acesso_br,
-      hora_acesso_br: value.hora_acesso_br,
-      endereco_ip: value.endereco_ip || "Desconhecido",
-      cidade: value.cidade || "Desconhecido",
-      estado: value.estado || "Desconhecido",
-      pais: value.pais || "Desconhecido",
-      sistema_operacional: value.sistema_operacional || "Desconhecido",
-      navegador: value.navegador || "Desconhecido",
-      utm_source: value.utm_source || "acesso-direto",
-      total_cliques: value.total_cliques || 0,
-      cliques_validos: value.cliques_validos || 0,
-      tempo_permanencia: value.tempo_permanencia || "00 min 00 s",
-    }
-
     const query = `
     INSERT INTO visitantes (
       visitor_id, timestamp_inicio, data_acesso_br, hora_acesso_br,
@@ -338,27 +315,12 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     RETURNING id, visitor_id
   `
 
-    const valores = [
-      dadosCompletos.visitor_id,
-      dadosCompletos.timestamp_inicio,
-      dadosCompletos.data_acesso_br,
-      dadosCompletos.hora_acesso_br,
-      dadosCompletos.endereco_ip,
-      dadosCompletos.cidade,
-      dadosCompletos.estado,
-      dadosCompletos.pais,
-      dadosCompletos.sistema_operacional,
-      dadosCompletos.navegador,
-      dadosCompletos.utm_source,
-      dadosCompletos.total_cliques,
-      dadosCompletos.cliques_validos,
-      dadosCompletos.tempo_permanencia,
-    ]
-
-    const resultado = await pool.query(query, valores)
+    // Enviar query ao banco de dados
+    const resultado = await pool.query(query, dadosVisitante)
     console.log("✅ Dados salvos com sucesso no banco")
 
-    await enviarNotificacaoDiscord(dadosCompletos)
+    // Enviar notificação ao Discord
+    await enviarNotificacaoDiscord(dadosVisitante)
 
     fastify.log.info(
       `✅ Novo visitante registrado: ${resultado.rows[0].visitor_id}`
