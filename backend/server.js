@@ -25,9 +25,7 @@ console.log("✅ Instância do Fastify configurada com sucesso!")
 // Configuração do CORS
 const origensPermitidas = [
   process.env.FRONTEND_URL,
-  `http://localhost:${process.env.PORT || 3000}`,
-  "http://localhost",
-  "https://localhost",
+  "http://127.0.0.1:5500/frontend/index.html",
 ].filter(Boolean)
 
 console.log("📃 Origens CORS permitidas:", origensPermitidas)
@@ -272,6 +270,8 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   }
 
   const geolocalizacao = await obterGeolocalizacao(ip)
+
+  console.log("📍 Dados de geolocalização obtidos:", geolocalizacao)
 
   console.log("✅ Dados iniciais do visitante coletados:", {
     ip,
