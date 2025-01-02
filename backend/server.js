@@ -122,6 +122,7 @@ async function criarTabelaSeNaoExistir() {
 }
 
 // Schemas de validação
+// Schema de validação para registro de novo visitante
 const schemaRegistrarVisitante = Joi.object({
   visitor_id: Joi.string()
     .pattern(/^v_\d{13}_[a-f0-9]{9}$/)
@@ -138,14 +139,30 @@ const schemaRegistrarVisitante = Joi.object({
   hora_acesso_br: Joi.string()
     .pattern(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/)
     .required(),
-  sistema_operacional: Joi.string().max(100),
-  navegador: Joi.string().max(200),
-  utm_source: Joi.string().max(100).default("acesso-direto"),
+  endereco_ip: Joi.string()
+    .ip({ version: ["ipv4", "ipv6"], cidr: "optional" })
+    .required(),
+  cidade: Joi.string().max(100).required(),
+  estado: Joi.string().max(100).required(),
+  pais: Joi.string().max(100).required(),
+  sistema_operacional: Joi.string().max(100).default("Desconhecido"),
+  navegador: Joi.string().max(200).default("Desconhecido"),
+  utm_source: Joi.string().max(100).default("Acesso Direto"),
   total_cliques: Joi.number().integer().min(0).default(0),
   cliques_validos: Joi.number().integer().min(0).default(0),
   tempo_permanencia: Joi.string()
     .pattern(/^[0-9]{2} min [0-9]{2} s$/)
     .default("00 min 00 s"),
+})
+
+// Schema de validação para atualização de dados de visitante
+const schemaAtualizarVisitante = Joi.object({
+  total_cliques: Joi.number().integer().min(0).default(0),
+  cliques_validos: Joi.number().integer().min(0).default(0),
+  tempo_permanencia: Joi.string()
+    .pattern(/^[0-9]{2} min [0-9]{2} s$/)
+    .default("00 min 00 s"),
+  utm_source: Joi.string().max(100).default("Acesso Direto"),
 })
 
 console.log("✅ Schemas de validação configurados!")
@@ -274,7 +291,7 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   console.log("✅ Dados iniciais do visitante coletados!")
 
   const dadosVisitante = {
-    visitor_id: request.body.visitor_id,
+    visitor_id: sanitizeHtml(request.body.visitor_id),
     timestamp_inicio: agora.toISOString(),
     data_acesso_br: agora.toLocaleDateString("pt-BR"),
     hora_acesso_br: agora.toLocaleTimeString("pt-BR"),
@@ -282,18 +299,25 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     cidade: sanitizeHtml(geolocalizacao?.cidade || "Desconhecido"),
     estado: sanitizeHtml(geolocalizacao?.estado || "Desconhecido"),
     pais: sanitizeHtml(geolocalizacao?.pais || "Desconhecido"),
-    sistema_operacional: sanitizeHtml(userAgent.os.toString()),
-    navegador: sanitizeHtml(userAgent.toAgent()),
-    utm_source: sanitizeHtml(request.body.utm_source || "acesso-direto"),
+    sistema_operacional: sanitizeHtml(
+      userAgent.os.toString() || "Desconhecido"
+    ),
+    navegador: sanitizeHtml(userAgent.toAgent() || "Desconhecido"),
+    utm_source: sanitizeHtml(request.body.utm_source || "Acesso Direto"),
     total_cliques: parseInt(request.body.total_cliques || 0),
     cliques_validos: parseInt(request.body.cliques_validos || 0),
-    tempo_permanencia: request.body.tempo_permanencia || "00 min 00 s",
+    tempo_permanencia: sanitizeHtml(
+      request.body.tempo_permanencia || "00 min 00 s"
+    ),
   }
 
-  const { error, value } = schemaRegistrarVisitante.validate(dadosVisitante, {
-    abortEarly: false,
-    stripUnknown: true,
-  })
+  const { error, dadosVisitanteValidados } = schemaRegistrarVisitante.validate(
+    dadosVisitante,
+    {
+      abortEarly: false,
+      stripUnknown: true,
+    }
+  )
 
   if (error) {
     console.log("❌ Erro na validação dos dados:", error.details[0].message)
@@ -316,18 +340,14 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   `
 
     // Objeto para array
-    const dadosVisitanteArray = Object.values(value)
-
-    // Console log
-    console.log("DEBUG", dadosVisitante)
-    console.log("DEBUG", value)
+    const dadosVisitanteValidadosArray = Object.values(dadosVisitanteValidados)
 
     // Enviar query ao banco de dados
-    const resultado = await pool.query(query, dadosVisitanteArray)
+    const resultado = await pool.query(query, dadosVisitanteValidadosArray)
     console.log("✅ Dados salvos com sucesso no banco")
 
     // Enviar notificação ao Discord
-    await enviarNotificacaoDiscord(dadosVisitante)
+    await enviarNotificacaoDiscord(dadosVisitanteValidados)
 
     fastify.log.info(
       `✅ Novo visitante registrado: ${resultado.rows[0].visitor_id}`
@@ -352,22 +372,13 @@ fastify.post("/registrar-visitante", async (request, reply) => {
 fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
   console.log("⏳ Processando atualização de dados do visitante...")
 
-  // Schema de validação para atualização
-  const schemaAtualizarVisitante = Joi.object({
-    total_cliques: Joi.number().integer().min(0).required(),
-    cliques_validos: Joi.number().integer().min(0).required(),
-    tempo_permanencia: Joi.string()
-      .pattern(/^[0-9]{2} min [0-9]{2} s$/)
-      .required(),
-    utm_source: Joi.string().max(100).required(),
-  })
-
   try {
     // Validação dos dados recebidos
-    const { error, value } = schemaAtualizarVisitante.validate(request.body, {
-      abortEarly: false,
-      stripUnknown: true,
-    })
+    const { error, dadosAtualizacaoValidados } =
+      schemaAtualizarVisitante.validate(request.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      })
 
     if (error) {
       console.log("❌ Erro na validação dos dados:", error.details[0].message)
@@ -389,11 +400,11 @@ fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
       RETURNING *
     `
 
-    // Array com os dados enviados via query
-    const arrayDeValores = Object.values(value)
+    // Array com os dados de atualização do visitante validados para envio via query
+    const dadosAtualiValiArray = Object.values(dadosAtualizacaoValidados)
 
     // Envia a query ao banco de dados
-    const resultado = await pool.query(query, arrayDeValores)
+    const resultado = await pool.query(query, dadosAtualiValiArray)
 
     if (resultado.rowCount === 0) {
       console.log("❌ Visitante não encontrado:", request.params.visitor_id)
@@ -437,7 +448,11 @@ async function enviarNotificacaoDiscord(dadosVisitante) {
             },
             {
               name: "💻 Dispositivo",
-              value: `${dadosVisitante.sistema_operacional}\n${dadosVisitante.navegador}`,
+              value: dadosVisitante.sistema_operacional || "Desconhecido",
+            },
+            {
+              name: "🌎 Navegador web",
+              value: dadosVisitante.navegador || "Desconhecido",
             },
             {
               name: "🔍 Origem",
