@@ -318,6 +318,9 @@ fastify.post("/registrar-visitante", async (request, reply) => {
     // Objeto para array
     const dadosVisitanteArray = Object.values(value)
 
+    // Console log
+    console.log("DEBUG", dadosVisitanteArray)
+
     // Enviar query ao banco de dados
     const resultado = await pool.query(query, dadosVisitanteArray)
     console.log("✅ Dados salvos com sucesso no banco")
