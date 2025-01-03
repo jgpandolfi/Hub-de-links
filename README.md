@@ -27,7 +27,7 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li>CSS</li>
 <li>JavaScript</li>
 <li>Node.JS</li>
-<li>Express.JS</li>
+<li>Fastify</li>
 <li>PostgreeSQL</li>
 <li>Git e Github</li>
 </ul>
@@ -55,20 +55,24 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 
 <p>Back-end:</p>
 <ul>
-<li>dotenv: Para variáveis de ambiente</li>
-<li>cors: Para gerenciamento de CORS</li>
-<li>Express.js como framework web</li>
+<li>Fastify: Framework web rápido, escalável e moderno, utilizado como base do servidor</li>
+<li>@fastify/cors: Gerenciamento avançado de CORS (Cross-Origin Resource Sharing)</li>
+<li>@fastify/rate-limit: Controle de taxa de requisições e proteção contra ataques DDoS</li>
+<li>dotenv: Gerenciamento de variáveis de ambiente</li>
 <li>PostgreeSQL como banco de dados</li>
 <li>Arquitetura REST</li>
-<li>Middlewares para processamento de requisições</li>
+<li>Axios: Cliente HTTP para requisições externas</li>
 <li>Pool de conexões para banco de dados</li>
 <li>Tratamento robusto de erros</li>
 <li>Logs detalhados de console</li>
 <li>Verificação e criação automática de tabelas no banco de dados</li>
-<li>Health check de conexões da aplicação</li>
-<li>Sanitização de dados</li>
-<li>Validação de entradas</li>
+<li>Sanitização avançada de dados com sanitize-html</li>
+<li>Validação e limpeza avançadas de dados com Joi</li>
 <li>Código modular e organizado</li>
+<li>Debouncing: Otimização de requisições frequentes</li>
+<li>Retry Pattern: Tentativas múltiplas em caso de falha</li>
+<li>Consumo de APIs externas com Fallback</li>
+<li>Uso de status codes HTTP apropriados para cada situação</li>
 </ul>
 
 ## 💻 Recursos e funcionalidades
@@ -88,7 +92,7 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 <li><b>Botões (e teclas) de navegação no modal do portfólio de design:</b> troque facilmente entre as imagens com o modal aberto
 <li><b>Barra de pesquisa no portfólio de imagens:</b> para facilitar a busca por imagens relacionadas a segmentos específicos</li>
 <li><b>Preferências de usuário salvas no Local Storage:</b> o tema de preferência do usuário é salvo no local storage, para maior comodidade</li>
-<li><b>Banco de dados próprios para insights:</b> armazenamento de número de cliques em cada botão</li>
+<li><b>Traqueamento (tracking) próprio de insights dos visitantes da página web:</b> armazenamento de dados dos visitantes da página web em banco de dados e backend próprios</li>
 <li><b>Programa para geração de relatórios de insghts:</b> programa em Node.JS separado do servidor para geração de relatórios em .txt dos insights do banco de dados próprio sobre os visitantes</li>
 </ul>
 
@@ -98,6 +102,7 @@ Projeto de front-end desenvolvido e utilizado por mim como um hub de links em mi
 
 <p>🔴 Não iniciado:</p>
 <ul>
+<li><b>Ambiente do administrador:</b> aplicação web para que o administrador do sistema possa acessar e visualizar os dados armazenados dos visitates da página web</li>
 <li><b>Facebook Pixel:</b> para eventuais campanhas de anúncios pagos</li>
 <li><b>Google Tag Manager e Google Analytics:</b> para melhor acompanhamento da experiência do usuário</li>
 <li><b>Botão e página (em SPA) de projetos:</b> para que o usuário possa conhecer outros projetos de desenvolvimento web que estou empenhado</li>
