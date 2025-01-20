@@ -293,24 +293,34 @@ fastify.post("/registrar-visitante", async (request, reply) => {
   console.log("✅ Dados iniciais do visitante coletados!")
 
   const dadosVisitante = {
-    visitor_id: sanitizeHtml(request.body.visitor_id),
+    visitor_id: sanitizeHtml(request.body.visitor_id).toWellFormedString(),
     timestamp_inicio: agora.toISOString(),
     data_acesso_br: agora.toLocaleDateString("pt-BR"),
     hora_acesso_br: agora.toLocaleTimeString("pt-BR"),
     endereco_ip: ip,
-    cidade: sanitizeHtml(geolocalizacao?.cidade || "Desconhecido"),
-    estado: sanitizeHtml(geolocalizacao?.estado || "Desconhecido"),
-    pais: sanitizeHtml(geolocalizacao?.pais || "Desconhecido"),
+    cidade: sanitizeHtml(
+      geolocalizacao?.cidade || "Desconhecido"
+    ).toWellFormedString(),
+    estado: sanitizeHtml(
+      geolocalizacao?.estado || "Desconhecido"
+    ).toWellFormedString(),
+    pais: sanitizeHtml(
+      geolocalizacao?.pais || "Desconhecido"
+    ).toWellFormedString(),
     sistema_operacional: sanitizeHtml(
       userAgent.os.toString() || "Desconhecido"
-    ),
-    navegador: sanitizeHtml(userAgent.toAgent() || "Desconhecido"),
-    utm_source: sanitizeHtml(request.body.utm_source || "Acesso Direto"),
+    ).toWellFormedString(),
+    navegador: sanitizeHtml(
+      userAgent.toAgent() || "Desconhecido"
+    ).toWellFormedString(),
+    utm_source: sanitizeHtml(
+      request.body.utm_source || "Acesso Direto"
+    ).toWellFormedString(),
     total_cliques: parseInt(request.body.total_cliques || 0),
     cliques_validos: parseInt(request.body.cliques_validos || 0),
     tempo_permanencia: sanitizeHtml(
       request.body.tempo_permanencia || "00 min 00 s"
-    ),
+    ).toWellFormedString(),
   }
 
   const { error, value: dadosVisitanteValidados } =
@@ -374,12 +384,12 @@ fastify.put("/atualizar-visitante/:visitor_id", async (request, reply) => {
 
   try {
     const dadosAtVisitante = {
-      visitor_id: sanitizeHtml(request.params.visitor_id),
+      visitor_id: sanitizeHtml(request.params.visitor_id).toWellFormedString(),
       total_cliques: parseInt(request.body.total_cliques || 0),
       cliques_validos: parseInt(request.body.cliques_validos || 0),
       tempo_permanencia: sanitizeHtml(
         request.body.tempo_permanencia || "00 min 00 s"
-      ),
+      ).toWellFormedString(),
     }
 
     // Validação dos dados recebidos
