@@ -785,7 +785,7 @@ class MonitorVisitante {
 
   #sanitizarTexto(texto) {
     if (!texto) return ""
-    return texto.replace(/[<>]/g, "").trim().slice(0, 200)
+    return texto.replace(/[<>]/g, "").trim().toWellFormedString().slice(0, 200)
   }
 
   #detectarSistema() {
