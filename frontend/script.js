@@ -799,10 +799,10 @@ class MonitorVisitante {
 
   #obterFonteUtm() {
     try {
-      return (
-        new URLSearchParams(window.location.search).get("utm_source") ||
-        "acesso-direto"
+      const utmSource = new URLSearchParams(window.location.search).get(
+        "utm_source"
       )
+      return this.#sanitizarTexto(utmSource) || "acesso-direto"
     } catch {
       return "acesso-direto"
     }
