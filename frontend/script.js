@@ -652,6 +652,88 @@ function verificarDirecaoArrasto() {
   }
 }
 
+//
+// Busca (filtro) por artigos específicos na lista de artigos publicados
+
+// Selecionando e salvando variáveis dos elementos que iremos utilizar
+const barraDeBuscaArtigos = document.getElementById("barra-de-busca-artigos")
+
+// Função para exibir apenas artigos que sejam relacionados ao input do usuário
+function buscarArtigos() {
+  // Puxa o que estiver escrito na barra e armazena como variável
+  const termosBuscados = barraDeBuscaArtigos.value.trim().toLowerCase()
+  // Seleciona todas as divs de itens do portfólio
+  const itensDaListaDeArtigos = document.querySelectorAll(
+    "#container-artigos ul li a"
+  )
+  // Tomar cuidado ^ a variável acima não seleciona as imagens do portfólio, mas sim as divs container de cada uma das imagens
+
+  // Checa se o campo de busca não está em branco (evitar bugs futuramente)
+  if (termosBuscados.length === 0) {
+    // Se o campo de busca estiver vazio => exibir todos os itens
+    itensDaListaDeArtigos.forEach((item) => {
+      item.style.display = "block"
+    })
+  } else {
+    itensDaListaDeArtigos.forEach((item) => {
+      const textoDoLink = item.textContent.toLowerCase()
+
+      if (textoDoLink.includes(termosBuscados)) {
+        item.style.display = "block"
+      } else {
+        item.style.display = "none"
+      }
+    })
+  }
+}
+
+// Acrecenta um listener na barra de busca com evento key up
+barraDeBuscaArtigos.addEventListener("keyup", buscarArtigos)
+
+// Recurso para exibir e ocultar a lista de artigos
+// Identificar e selecionar o botão utilizado para acessar a lista de artigos
+const btnArtigos = document.getElementById("btn-artigos")
+
+// Identificar e selecionar o botão utilizado para voltar aos links (estado inicial)
+const btnVoltarDeArtigosParaLinks = document.getElementById(
+  "btn-voltar-de-artigos-para-links"
+)
+
+// Identificar e selecionar os containers que devem ser exibidos/ocultados
+// (variável divLinks já foi obtida no trecho de código de exibir/ocultar portfólio de imagens)
+const divArtigos = document.getElementById("container-artigos")
+
+// Criar a função para executar as ações desejadas para abertura do portfólio
+function abrirArtigos() {
+  divLinks.style.display = "none"
+  divArtigos.style.display = "block"
+
+  history.replaceState(null, "Meus Artigos Publicados", "/meus-artigos")
+}
+
+// Criar a função para executar as ações desejadas para voltar aos links (estado inicial)
+function fecharArtigos() {
+  divArtigos.style.display = "none"
+  divLinks.style.display = "block"
+
+  history.replaceState(null, "", "")
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  })
+}
+
+// Adicionar um listener de clique no botão para ir ao portfólio de design
+btnArtigos.addEventListener("click", () => {
+  abrirArtigos()
+})
+
+// Adicionar um listener de clique no botão para voltar aos links (estado inicial)
+btnVoltarDeArtigosParaLinks.addEventListener("click", () => {
+  fecharArtigos()
+})
+
 // =============
 // Política de privacidade
 // Seleciona os botões de Aceitar e Recusar

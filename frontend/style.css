@@ -425,22 +425,26 @@ footer {
   padding: 0 3px;
 }
 
-/* Estilos relacionados a galeria de imagens de portfólio de social media */
-#container-portfolio {
+/* Estilos relacionados a galeria de imagens de portfólio de social media e da lista de artigos*/
+#container-portfolio,
+#container-artigos {
   display: none;
 }
 
-#p-titulo-portfolio {
+#p-titulo-portfolio,
+#p-titulo-artigos {
   margin-top: 28px;
   text-align: center;
   font-size: 16px;
 }
 
-#container-barra-de-busca-portfolio {
+#container-barra-de-busca-portfolio,
+#container-barra-de-busca-artigos {
   margin: 20px 0;
 }
 
-#barra-de-busca-portfolio {
+#barra-de-busca-portfolio,
+#barra-de-busca-artigos {
   width: 100%;
   padding: 10px;
   font-size: 16px;
