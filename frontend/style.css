@@ -451,6 +451,10 @@ footer {
   border-radius: 4px;
 }
 
+#container-artigos ul li a {
+  text-align: left;
+}
+
 #grid-portfolio {
   margin-top: 12px;
   display: grid;
